@@ -40,9 +40,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with MeeduPlayerEventsMixin {
-  final MeeduPlayerController _controller = MeeduPlayerController(
-    backgroundColor: Color(0xff263238)
-  );
+  final MeeduPlayerController _controller =
+      MeeduPlayerController(backgroundColor: Color(0xff263238));
 
   @override
   void initState() {
@@ -62,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> with MeeduPlayerEventsMixin {
       src: source,
       type: DataSourceType.network,
       autoPlay: true,
-       aspectRatio: 16/9,
+      aspectRatio: 16 / 9,
       title: Text(
         source,
         style: TextStyle(
@@ -81,27 +80,25 @@ class _MyHomePageState extends State<MyHomePage> with MeeduPlayerEventsMixin {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: NestedScrollView(
-        headerSliverBuilder: (_, __) {
-          return [
-            SliverToBoxAdapter(
-              child: MeeduPlayer(
-                controller: _controller,
-              ),
-            )
-          ];
-        },
-        body: ListView.builder(
-          itemBuilder: (_, index) {
-            return ListTile(
-              onTap: () {
-                this._set(videos[index]);
+      body: Column(
+        children: <Widget>[
+          MeeduPlayer(
+            controller: _controller,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (_, index) {
+                return ListTile(
+                  onTap: () {
+                    this._set(videos[index]);
+                  },
+                  title: Text("View video ${index + 1}"),
+                );
               },
-              title: Text("View video ${index + 1}"),
-            );
-          },
-          itemCount: videos.length,
-        ),
+              itemCount: videos.length,
+            ),
+          )
+        ],
       ),
     );
   }
