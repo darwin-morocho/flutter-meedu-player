@@ -2,6 +2,9 @@
 
 UI for  [video_player](https://pub.dev/packages/video_player)
 
+![min2](https://user-images.githubusercontent.com/15864336/82267395-d9846080-9931-11ea-8abf-10f8ac3fb0f3.gif)
+
+
 ## Getting Started
 
 If you want to use urls with http:// you need a little configuration.
@@ -75,9 +78,9 @@ class _MyHomePageState extends State<MyHomePage> with MeeduPlayerEventsMixin {
     await _controller.setDataSource(
       src: source,
       type: DataSourceType.network,
-      autoPlay: true,
-       aspectRatio: 16/9,
-      title: Text(
+      autoPlay: true, // optional
+       aspectRatio: 16/9,//optional
+       title: Text(
         source,
         style: TextStyle(
           color: Colors.white,
