@@ -39,7 +39,7 @@ class _MeeduFullscreenPlayerState extends State<MeeduFullscreenPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: widget.controller.backgroundColor,
       body: Center(child: widget.controller.player),
     );
   }

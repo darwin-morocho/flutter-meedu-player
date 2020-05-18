@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  video_player: ">=0.10.11 <2.0.0"
   meedu_player: 
     path: ../
 

@@ -1,50 +1,70 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/colors.dart';
-import 'package:meedu_player/src/meedu_player_controls.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-
 import 'meedu_fullscreen_player.dart';
+import 'meedu_player_provider.dart';
+import 'player_events_mixin.dart';
 
-enum MeeduPlayerStatus { loading, playing, paused, stopped, finished, error }
+enum MeeduPlayerStatus {
+  loading,
+  loaded,
+  playing,
+  paused,
+  stopped,
+  finished,
+  error
+}
 
 class MeeduPlayerController extends ChangeNotifier {
+  final Color backgroundColor;
   VideoPlayerController _videoPlayerController;
   MeeduPlayerStatus _status = MeeduPlayerStatus.loading;
   String _dataSource;
-  bool _finished = false, _isFullScreen = false;
+
+  Widget _title;
+  bool _finished = false, _isFullScreen = false, _autoPlay = false;
   ValueNotifier<Duration> _duration = ValueNotifier(Duration.zero);
   ValueNotifier<Duration> _position = ValueNotifier(Duration.zero);
   ValueNotifier<List<DurationRange>> _buffered = ValueNotifier([]);
   MeeduPlayerProvider _player;
   OverlayEntry _overlayEntry;
+  double _aspectRatio;
 
   MeeduPlayerStatus get status => _status;
   String get dataSource => _dataSource;
+  double get aspectRatio => _aspectRatio;
+  Widget get title => _title;
   bool get isFullScreen => _isFullScreen;
+  bool get autoPlay => _autoPlay;
   ValueNotifier<Duration> get position => _position;
   ValueNotifier<Duration> get duration => _duration;
   ValueNotifier<List<DurationRange>> get buffered => _buffered;
   VideoPlayerController get videoPlayerController => _videoPlayerController;
   MeeduPlayerProvider get player => _player;
-  MeeduPlayerController() {
+
+  MeeduPlayerController({this.backgroundColor = darkColor}) {
     _createPlayer();
   }
+
+  MeeduPlayerEventsMixin events;
 
   @override
   void dispose() {
     print("constroller dispose");
     fullScreenOff();
+    _videoPlayerController?.removeListener(this._listener);
     _videoPlayerController?.dispose();
     super.dispose();
   }
 
   bool get loading {
     return _status == MeeduPlayerStatus.loading;
+  }
+
+  bool get loaded {
+    return _status == MeeduPlayerStatus.loaded;
   }
 
   bool get playing {
@@ -68,6 +88,7 @@ class MeeduPlayerController extends ChangeNotifier {
       _overlayEntry.remove();
       _overlayEntry = null;
       _isFullScreen = false;
+      this.events?.onPlayerFullScreen(false);
     }
   }
 
@@ -87,6 +108,7 @@ class MeeduPlayerController extends ChangeNotifier {
       },
     );
     overlayState.insert(_overlayEntry);
+    this.events?.onPlayerFullScreen(true);
     //  await Navigator.push(context, route);
     //  _isFullScreen = false;
   }
@@ -94,25 +116,38 @@ class MeeduPlayerController extends ChangeNotifier {
   Future<void> setDataSource({
     @required String src,
     @required DataSourceType type,
+    bool autoPlay = false,
+    Widget title,
+    double aspectRatio,
   }) async {
     print("source $src");
     if (_dataSource == src) return;
+    this._aspectRatio = aspectRatio;
     _dataSource = src;
     this._status = MeeduPlayerStatus.loading;
+    this._title = title;
     _duration.value = Duration.zero;
     _position.value = Duration.zero;
     _finished = false;
     notifyListeners();
+    this.events?.onPlayerLoading();
 
-    if (_videoPlayerController != null) {
-      await _videoPlayerController.dispose();
-      _videoPlayerController = null;
-    }
+    final oldController = _videoPlayerController;
+
     if (type == DataSourceType.asset) {
       _videoPlayerController = new VideoPlayerController.asset(_dataSource);
     } else if (type == DataSourceType.network) {
       _videoPlayerController = new VideoPlayerController.network(_dataSource);
     }
+
+    // Registering a callback for the end of next frame
+    // to dispose of an old controller
+    // (which won't be used anymore after calling setState)
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await oldController.dispose();
+    });
+
+    this._autoPlay = autoPlay;
     await this._initialize();
   }
 
@@ -120,35 +155,43 @@ class MeeduPlayerController extends ChangeNotifier {
     try {
       if (_videoPlayerController == null) return;
       await _videoPlayerController.initialize();
-      await _videoPlayerController.play();
-      _videoPlayerController.addListener(() {
-        if (_finished) return;
-        if (_status != MeeduPlayerStatus.playing &&
-            _videoPlayerController.value.isPlaying) {
-          _status = MeeduPlayerStatus.playing;
-          notifyListeners();
-        }
+      _status = MeeduPlayerStatus.loaded;
+      final Duration duration = _videoPlayerController.value.duration;
+      this.events.onPlayerLoaded(duration);
+      this.duration.value = duration;
+      notifyListeners();
 
-        final Duration duration = _videoPlayerController.value.duration;
-        final Duration position = _videoPlayerController.value.position;
-        if (duration != null) {
-          if (duration.inSeconds != _duration.value.inSeconds) {
-            _duration.value = duration;
-          }
-          _position.value = position;
-          if (position.inSeconds == duration.inSeconds) {
-            _finished = true;
-            _status = MeeduPlayerStatus.finished;
-            notifyListeners();
-          }
-        }
-        _buffered.value = _videoPlayerController.value.buffered;
-      });
+      _videoPlayerController.addListener(this._listener);
+      if (this._autoPlay) {
+        await _videoPlayerController.play();
+        this.events?.onPlayerPlaying();
+      }
     } on PlatformException catch (e) {
-      print(e);
       this._status = MeeduPlayerStatus.error;
+      this.events?.onPlayerError(e);
       notifyListeners();
     }
+  }
+
+  _listener() {
+    if (_finished) return;
+    if (_status != MeeduPlayerStatus.playing &&
+        _videoPlayerController.value.isPlaying) {
+      _status = MeeduPlayerStatus.playing;
+      notifyListeners();
+    }
+
+    final Duration position = _videoPlayerController.value.position;
+    if (_duration != null) {
+      _position.value = position;
+      if (position.inSeconds == _duration.value.inSeconds) {
+        _finished = true;
+        _status = MeeduPlayerStatus.finished;
+        this.events?.onPlayerFinished();
+        notifyListeners();
+      }
+    }
+    _buffered.value = _videoPlayerController.value.buffered;
   }
 
   Future<void> pause() async {
@@ -156,6 +199,7 @@ class MeeduPlayerController extends ChangeNotifier {
     if (_videoPlayerController != null) {
       await _videoPlayerController.pause();
       _status = MeeduPlayerStatus.paused;
+      this.events?.onPlayerPaused(this.position.value);
       notifyListeners();
     }
   }
@@ -166,6 +210,7 @@ class MeeduPlayerController extends ChangeNotifier {
       _finished = false;
       await _videoPlayerController.play();
       _status = MeeduPlayerStatus.playing;
+      this.events?.onPlayerResumed();
       notifyListeners();
     }
   }
@@ -175,6 +220,7 @@ class MeeduPlayerController extends ChangeNotifier {
       _finished = false;
       await this._videoPlayerController.seekTo(Duration.zero);
       await this._videoPlayerController.play();
+      this.events?.onPlayerRepeat();
       this._status = MeeduPlayerStatus.playing;
     }
   }
@@ -185,7 +231,7 @@ class MeeduPlayerController extends ChangeNotifier {
       await _videoPlayerController.seekTo(position);
       _position.value = position;
       if (_finished) {
-        _finished = false;  
+        _finished = false;
         _status = MeeduPlayerStatus.playing;
         notifyListeners();
       }
@@ -194,53 +240,5 @@ class MeeduPlayerController extends ChangeNotifier {
 
   _createPlayer() {
     this._player = MeeduPlayerProvider(this);
-  }
-}
-
-class MeeduPlayerProvider extends StatelessWidget {
-  final MeeduPlayerController controller;
-  MeeduPlayerProvider(this.controller);
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: this.controller,
-      child: Hero(
-        tag: 'meeduPlayer',
-        child: AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Container(
-            color: darkColor,
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Consumer<MeeduPlayerController>(
-                  builder: (_, controller, child) {
-                    if (controller.loading) {
-                      return SpinKitWave(
-                        size: 30,
-                        color: Colors.white,
-                        duration: Duration(milliseconds: 1000),
-                      );
-                    } else if (controller.error) {
-                      return Text(
-                        "Failed to load video",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      );
-                    }
-                    return VideoPlayer(
-                      controller.videoPlayerController,
-                    );
-                  },
-                ),
-                MeeduPlayerControls(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'colors.dart';
-import 'meedu_video_player_controller.dart';
+import '../colors.dart';
+import '../meedu_video_player_controller.dart';
 import 'player_button.dart';
 import 'video_bottom_controls.dart';
 
@@ -34,7 +34,12 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
   Widget build(BuildContext context) {
     return Consumer<MeeduPlayerController>(
       builder: (_, controller, __) {
-        if (controller.loading) return Container(height: 0);
+        if (controller.loading || controller.error) return Container(height: 0);
+
+        final visible = _visible ||
+            (controller.loaded && !controller.autoPlay) ||
+            controller.finished;
+
         return Positioned.fill(
           child: GestureDetector(
             onTap: () {
@@ -42,8 +47,8 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
               setState(() {});
             },
             child: AnimatedContainer(
-              color: darkColor.withOpacity(
-                _visible ? 0.6 : 0,
+              color: controller.backgroundColor.withOpacity(
+                visible ? 0.6 : 0,
               ),
               height: double.infinity,
               duration: Duration(milliseconds: 300),
@@ -52,6 +57,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                   return Stack(
                     alignment: Alignment.bottomCenter,
                     children: <Widget>[
+                      //START HEADER
                       AnimatedPositioned(
                         duration: Duration(milliseconds: 300),
                         left: 0,
@@ -61,8 +67,8 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                darkColor,
-                                darkColor.withOpacity(0.3),
+                                controller.backgroundColor,
+                                controller.backgroundColor.withOpacity(0.3),
                                 Colors.transparent,
                               ],
                               begin: Alignment.topCenter,
@@ -72,37 +78,23 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Introduccion al desarrollo backend",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                child: FlatButton(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    "HD",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
+                              controller.title != null
+                                  ? Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: controller.title,
+                                      ),
+                                    )
+                                  : Container(),
                             ],
                           ),
                         ),
                       ),
+                      // END HEADER
+
                       AnimatedPositioned(
-                        top: (_visible ? 1 : -1) * constraints.maxHeight / 2 -
-                            30,
+                        top:
+                            (visible ? 1 : -1) * constraints.maxHeight / 2 - 40,
                         duration: Duration(milliseconds: 300),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -153,7 +145,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                       AnimatedPositioned(
                         left: 0,
                         right: 0,
-                        bottom: _visible ? 0 : -100,
+                        bottom: visible ? 0 : -100,
                         duration: Duration(milliseconds: 300),
                         child: VideoBottomControls(
                           controller: controller,

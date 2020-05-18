@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import 'extras.dart';
+import '../extras.dart';
 
 class VideoProgressBar extends StatefulWidget {
   final Duration duration;
@@ -20,7 +20,7 @@ class VideoProgressBar extends StatefulWidget {
   @override
   _VideoProgressBarState createState() => _VideoProgressBarState();
 }
- 
+
 class _VideoProgressBarState extends State<VideoProgressBar> {
   double _value = 0;
   bool _dragging = false;
@@ -48,7 +48,7 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: 0),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -75,30 +75,37 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
             ),
             SliderTheme(
               data: SliderThemeData(
+                trackHeight: 3,
                 trackShape: _CustomTrackShape(),
                 thumbShape: RoundSliderThumbShape(enabledThumbRadius: 3.0),
               ),
-              child: Slider(
-                value: _value,
-                min: 0,
-                max: widget.duration.inSeconds.toDouble(),
-                label: printDuration2(_value.toInt()),
-                divisions: 100,
-                onChanged: (v) {
-                  _value = v;
-                  setState(() {});
-                },
-                onChangeStart: (v) {
-                  _dragging = true;
-                },
-                onChangeEnd: (v) {
-                  _dragging = false;
-                  widget.onSeekTo(
-                    Duration(seconds: _value.toInt()),
-                  );
-                },
-                activeColor: Colors.redAccent,
-                inactiveColor: Colors.transparent,
+              child: Transform.translate(
+                offset: Offset(0, 0),
+                child: Container(
+                  height: 25,
+                  child: Slider(
+                    value: _value,
+                    min: 0,
+                    max: widget.duration.inSeconds.toDouble(),
+                    label: printDuration2(_value.toInt()),
+                    divisions: 100,
+                    onChanged: (v) {
+                      _value = v;
+                      setState(() {});
+                    },
+                    onChangeStart: (v) {
+                      _dragging = true;
+                    },
+                    onChangeEnd: (v) {
+                      _dragging = false;
+                      widget.onSeekTo(
+                        Duration(seconds: _value.toInt()),
+                      );
+                    },
+                    activeColor: Colors.redAccent,
+                    inactiveColor: Colors.transparent,
+                  ),
+                ),
               ),
             ),
           ],
@@ -120,7 +127,7 @@ class _ProgressBarPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill
       ..strokeWidth = 30;
-    final rect = Rect.fromLTWH(0, -1.5, size.width, 3);
+    final rect = Rect.fromLTWH(0, 5 - 1.5, size.width, 3);
     canvas.drawRect(rect, paint);
 
     paint
@@ -128,7 +135,7 @@ class _ProgressBarPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill
       ..strokeWidth = 30;
-    final rect2 = Rect.fromLTWH(0, -1.5, size.width * loaded / 100, 3);
+    final rect2 = Rect.fromLTWH(0, 5 - 1.5, size.width * loaded / 100, 3);
 
     canvas.drawRect(rect2, paint);
   }
@@ -152,6 +159,6 @@ class _CustomTrackShape extends RoundedRectSliderTrackShape {
     final double trackTop =
         offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop - .5, trackWidth, 3);
+    return Rect.fromLTWH(trackLeft, trackTop + 5, trackWidth, trackHeight);
   }
 }
