@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/colors.dart';
 import 'package:video_player/video_player.dart';
 import 'meedu_fullscreen_player.dart';
@@ -17,14 +20,36 @@ enum MeeduPlayerStatus {
   error
 }
 
+class DataSource {
+  final File file;
+  final String dataSource, package;
+  final DataSourceType type;
+  final VideoFormat formatHint;
+  final Future<ClosedCaptionFile> closedCaptionFile;
+
+  DataSource({
+    this.file,
+    this.dataSource,
+    @required this.type,
+    this.formatHint,
+    this.package,
+    this.closedCaptionFile,
+  })  : assert(type != null),
+        assert((type == DataSourceType.file && file != null) ||
+            dataSource != null);
+}
+
 class MeeduPlayerController extends ChangeNotifier {
   final Color backgroundColor;
   VideoPlayerController _videoPlayerController;
   MeeduPlayerStatus _status = MeeduPlayerStatus.loading;
-  String _dataSource;
+  DataSource _dataSource;
 
   Widget _title;
-  bool _finished = false, _isFullScreen = false, _autoPlay = false;
+  bool _finished = false,
+      _isFullScreen = false,
+      _autoPlay = false,
+      isPortrait = true;
   ValueNotifier<Duration> _duration = ValueNotifier(Duration.zero);
   ValueNotifier<Duration> _position = ValueNotifier(Duration.zero);
   ValueNotifier<List<DurationRange>> _buffered = ValueNotifier([]);
@@ -33,7 +58,7 @@ class MeeduPlayerController extends ChangeNotifier {
   double _aspectRatio;
 
   MeeduPlayerStatus get status => _status;
-  String get dataSource => _dataSource;
+  DataSource get dataSource => _dataSource;
   double get aspectRatio => _aspectRatio;
   Widget get title => _title;
   bool get isFullScreen => _isFullScreen;
@@ -114,16 +139,13 @@ class MeeduPlayerController extends ChangeNotifier {
   }
 
   Future<void> setDataSource({
-    @required String src,
-    @required DataSourceType type,
+    @required DataSource dataSource,
     bool autoPlay = false,
     Widget title,
     double aspectRatio,
   }) async {
-    print("source $src");
-    if (_dataSource == src) return;
     this._aspectRatio = aspectRatio;
-    _dataSource = src;
+    _dataSource = dataSource;
     this._status = MeeduPlayerStatus.loading;
     this._title = title;
     _duration.value = Duration.zero;
@@ -134,17 +156,30 @@ class MeeduPlayerController extends ChangeNotifier {
 
     final oldController = _videoPlayerController;
 
-    if (type == DataSourceType.asset) {
-      _videoPlayerController = new VideoPlayerController.asset(_dataSource);
-    } else if (type == DataSourceType.network) {
-      _videoPlayerController = new VideoPlayerController.network(_dataSource);
+    if (_dataSource.type == DataSourceType.asset) {
+      _videoPlayerController = new VideoPlayerController.asset(
+        _dataSource.dataSource,
+        closedCaptionFile: _dataSource.closedCaptionFile,
+        package: _dataSource.package,
+      );
+    } else if (_dataSource.type == DataSourceType.network) {
+      _videoPlayerController = new VideoPlayerController.network(
+        _dataSource.dataSource,
+        formatHint: _dataSource.formatHint,
+        closedCaptionFile: _dataSource.closedCaptionFile,
+      );
+    } else {
+      _videoPlayerController = new VideoPlayerController.file(
+        _dataSource.file,
+        closedCaptionFile: _dataSource.closedCaptionFile,
+      );
     }
 
     // Registering a callback for the end of next frame
     // to dispose of an old controller
     // (which won't be used anymore after calling setState)
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await oldController.dispose();
+      await oldController?.dispose();
     });
 
     this._autoPlay = autoPlay;
@@ -157,7 +192,7 @@ class MeeduPlayerController extends ChangeNotifier {
       await _videoPlayerController.initialize();
       _status = MeeduPlayerStatus.loaded;
       final Duration duration = _videoPlayerController.value.duration;
-      this.events.onPlayerLoaded(duration);
+      this.events?.onPlayerLoaded(duration);
       this.duration.value = duration;
       notifyListeners();
 
