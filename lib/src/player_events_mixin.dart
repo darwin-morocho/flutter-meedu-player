@@ -6,6 +6,7 @@ mixin MeeduPlayerEventsMixin {
   void onPlayerLoaded(Duration duration);
   void onPlayerPlaying();
   void onPlayerPaused(Duration position);
+  void onPlayerPosition(Duration position);
   void onPlayerResumed();
   void onPlayerRepeat();
   void onPlayerSeekTo(Duration position);

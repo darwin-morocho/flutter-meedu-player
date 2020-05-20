@@ -39,76 +39,63 @@ class MeeduPlayerProvider extends StatelessWidget {
       value: this.controller,
       child: Hero(
         tag: 'meeduPlayer',
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Consumer<MeeduPlayerController>(
-              builder: (_, controller, child) {
-                if (controller.loading) {
-                  return _PlayerContainer(
-                    child: SpinKitWave(
-                      size: 30,
-                      color: Colors.white,
-                      duration: Duration(milliseconds: 1000),
-                    ),
-                    aspectRatio: controller.aspectRatio ?? 16 / 9,
-                    backgroundColor: controller.backgroundColor,
-                  );
-                } else if (controller.error) {
+        child: Container(
+          width: double.infinity,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Consumer<MeeduPlayerController>(
+                builder: (_, controller, child) {
+                  if (controller.loading) {
+                    return _PlayerContainer(
+                      child: SpinKitWave(
+                        size: 30,
+                        color: Colors.white,
+                        duration: Duration(milliseconds: 1000),
+                      ),
+                      aspectRatio: controller.aspectRatio ?? 16 / 9,
+                      backgroundColor: controller.backgroundColor,
+                    );
+                  } else if (controller.error) {
+                    return _PlayerContainer(
+                      child: Center(
+                        child: Text(
+                          "Failed to load video",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      backgroundColor: controller.backgroundColor,
+                      aspectRatio: controller.aspectRatio ?? 16 / 9,
+                    );
+                  }
+
+                  final videoAspectRatio =
+                      controller.videoPlayerController.value.aspectRatio;
+
                   return _PlayerContainer(
                     child: Center(
-                      child: Text(
-                        "Failed to load video",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          AspectRatio(
+                            aspectRatio: videoAspectRatio,
+                            child: VideoPlayer(
+                              controller.videoPlayerController,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     backgroundColor: controller.backgroundColor,
-                    aspectRatio: controller.aspectRatio ?? 16 / 9,
+                    aspectRatio: controller.aspectRatio ?? videoAspectRatio,
                   );
-                }
-
-                final videoAspectRatio =
-                    controller.videoPlayerController.value.aspectRatio;
-
-                return _PlayerContainer(
-                  child: Center(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        AspectRatio(
-                          aspectRatio: videoAspectRatio,
-                          child: VideoPlayer(
-                            controller.videoPlayerController,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          left: 40,
-                          right: 40,
-                          child: ValueListenableBuilder(
-                            valueListenable: controller.position,
-                            builder: (_, __, child) => ClosedCaption(
-                              text: controller
-                                  .videoPlayerController.value.caption.text,
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  backgroundColor: controller.backgroundColor,
-                  aspectRatio: controller.aspectRatio ?? videoAspectRatio,
-                );
-              },
-            ),
-            MeeduPlayerControls(),
-          ],
+                },
+              ),
+              MeeduPlayerControls(),
+            ],
+          ),
         ),
       ),
     );

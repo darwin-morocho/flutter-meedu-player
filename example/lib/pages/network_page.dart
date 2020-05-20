@@ -8,7 +8,7 @@ final videos = [
   'https://content.jwplatform.com/manifests/yp34SRmf.m3u8',
   'http://www.html5videoplayer.net/videos/toystory.mp4',
   'https://html5videoformatconverter.com/data/images/happyfit2.mp4',
-  'http://www.html5videoplayer.net/videos/madagascar3.mp4',
+  'http://playertest.longtailvideo.com/adaptive/bbbfull/bbbfull.m3u8',
 ];
 
 class NetworkPageDemo extends StatefulWidget {
@@ -44,11 +44,14 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
       ),
       autoPlay: true,
       aspectRatio: 16 / 9,
-      title: Text(
-        source,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w400,
+      header: Container(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          source,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
     );
@@ -58,7 +61,7 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-              child: Column(
+        child: Column(
           children: <Widget>[
             MeeduPlayer(
               controller: _controller,
@@ -130,5 +133,10 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
   @override
   void onPlayerSeekTo(Duration position) {
     // TODO: implement onPlayerSeekTo
+  }
+
+  @override
+  void onPlayerPosition(Duration position) {
+    // TODO: implement onPlayerPosition
   }
 }

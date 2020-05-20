@@ -45,11 +45,12 @@ class MeeduPlayerController extends ChangeNotifier {
   MeeduPlayerStatus _status = MeeduPlayerStatus.loading;
   DataSource _dataSource;
 
-  Widget _title;
+  Widget _header, _bottomLeftContent, _bottomRightContent;
   bool _finished = false,
       _isFullScreen = false,
       _autoPlay = false,
       isPortrait = true;
+  ValueNotifier<bool> _closedCaptionEnabled = ValueNotifier(true);
   ValueNotifier<Duration> _duration = ValueNotifier(Duration.zero);
   ValueNotifier<Duration> _position = ValueNotifier(Duration.zero);
   ValueNotifier<List<DurationRange>> _buffered = ValueNotifier([]);
@@ -60,9 +61,12 @@ class MeeduPlayerController extends ChangeNotifier {
   MeeduPlayerStatus get status => _status;
   DataSource get dataSource => _dataSource;
   double get aspectRatio => _aspectRatio;
-  Widget get title => _title;
+  Widget get header => _header;
+  Widget get bottomLeftContent => _bottomLeftContent;
+  Widget get bottomRightContent => _bottomRightContent;
   bool get isFullScreen => _isFullScreen;
   bool get autoPlay => _autoPlay;
+  ValueNotifier<bool> get closedCaptionEnabled => _closedCaptionEnabled;
   ValueNotifier<Duration> get position => _position;
   ValueNotifier<Duration> get duration => _duration;
   ValueNotifier<List<DurationRange>> get buffered => _buffered;
@@ -108,6 +112,10 @@ class MeeduPlayerController extends ChangeNotifier {
     return _status == MeeduPlayerStatus.error;
   }
 
+  isClosedCaptionEnabled(bool enabled) {
+    this._closedCaptionEnabled.value = enabled;
+  }
+
   fullScreenOff() {
     if (_overlayEntry != null) {
       _overlayEntry.remove();
@@ -141,15 +149,20 @@ class MeeduPlayerController extends ChangeNotifier {
   Future<void> setDataSource({
     @required DataSource dataSource,
     bool autoPlay = false,
-    Widget title,
+    Widget header,
+    Widget bottomRightContent,
+    Widget bottomLeftContent,
     double aspectRatio,
+    Duration seekTo,
   }) async {
     this._aspectRatio = aspectRatio;
     _dataSource = dataSource;
     this._status = MeeduPlayerStatus.loading;
-    this._title = title;
+    this._header = header;
+    this._bottomLeftContent = bottomLeftContent;
+    this._bottomRightContent = bottomRightContent;
     _duration.value = Duration.zero;
-    _position.value = Duration.zero;
+    _position.value = seekTo ?? Duration.zero;
     _finished = false;
     notifyListeners();
     this.events?.onPlayerLoading();
@@ -183,10 +196,12 @@ class MeeduPlayerController extends ChangeNotifier {
     });
 
     this._autoPlay = autoPlay;
-    await this._initialize();
+    await this._initialize(seekTo: seekTo);
   }
 
-  Future<void> _initialize() async {
+  Future<void> _initialize({
+    Duration seekTo,
+  }) async {
     try {
       if (_videoPlayerController == null) return;
       await _videoPlayerController.initialize();
@@ -197,6 +212,9 @@ class MeeduPlayerController extends ChangeNotifier {
       notifyListeners();
 
       _videoPlayerController.addListener(this._listener);
+      if (seekTo != null) {
+        await _videoPlayerController.seekTo(seekTo);
+      }
       if (this._autoPlay) {
         await _videoPlayerController.play();
         this.events?.onPlayerPlaying();
@@ -224,6 +242,8 @@ class MeeduPlayerController extends ChangeNotifier {
         _status = MeeduPlayerStatus.finished;
         this.events?.onPlayerFinished();
         notifyListeners();
+      } else {
+        this.events?.onPlayerPosition(position);
       }
     }
     _buffered.value = _videoPlayerController.value.buffered;

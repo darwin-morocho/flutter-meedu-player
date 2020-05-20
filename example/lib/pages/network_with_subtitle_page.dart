@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/services/message_codec.dart';
 import 'package:meedu_player/meedu_player.dart';
 
 class NetworkWithSubtitlesPage extends StatefulWidget {
@@ -12,24 +13,58 @@ class _NetworkWithSubtitlesPageState extends State<NetworkWithSubtitlesPage> {
     backgroundColor: Colors.black,
   );
 
+  ValueNotifier<bool> _subtitlesEnabled = ValueNotifier(true);
+
   @override
   void initState() {
     super.initState();
-    _controller.setDataSource(
-      autoPlay: true,
-      dataSource: DataSource(
-        dataSource:
-            'https://thepaciellogroup.github.io/AT-browser-tests/video/ElephantsDream.mp4',
-        type: DataSourceType.network,
-        closedCaptionFile: this._loadCaptions(),
-      ),
-    );
+    this._setDataSource();
   }
 
   @override
   void dispose() {
     this._controller.dispose();
     super.dispose();
+  }
+
+  _setDataSource() {
+    _controller.setDataSource(
+      autoPlay: true,
+      header: Container(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          "Subtitles Demo",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      dataSource: DataSource(
+        dataSource:
+            'https://thepaciellogroup.github.io/AT-browser-tests/video/ElephantsDream.mp4',
+        type: DataSourceType.network,
+        closedCaptionFile: this._loadCaptions(),
+      ),
+      bottomLeftContent: FlatButton(
+        child: ValueListenableBuilder(
+          valueListenable: this._subtitlesEnabled,
+          builder: (BuildContext context, bool enabled, Widget child) {
+            return Text(
+              "CC",
+              style: TextStyle(
+                color: Colors.white.withOpacity(
+                  enabled ? 1 : 0.4,
+                ),
+              ),
+            );
+          },
+        ),
+        onPressed: () {
+          _subtitlesEnabled.value = !_subtitlesEnabled.value;
+          this._controller.isClosedCaptionEnabled(_subtitlesEnabled.value);
+        },
+      ),
+    );
   }
 
   Future<ClosedCaptionFile> _loadCaptions() async {

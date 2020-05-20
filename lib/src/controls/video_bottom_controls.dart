@@ -73,26 +73,22 @@ class _VideoBottomControlsState extends State<VideoBottomControls> {
                     },
                   ),
                   // END TIMER
-                  SizedBox(
-                    width: 50,
-                    child: CupertinoButton(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      minSize: 30,
-                      child: Text(
-                        "HD",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      onPressed: () {},
+                  if (widget.controller.bottomLeftContent != null) ...[
+                    SizedBox(
+                      width: 5,
                     ),
-                  ),
+                    widget.controller.bottomLeftContent
+                  ],
                 ],
               ),
               Row(
                 children: <Widget>[
+                  if (widget.controller.bottomRightContent != null) ...[
+                    widget.controller.bottomRightContent,
+                    SizedBox(
+                      width: 5,
+                    )
+                  ],
                   CupertinoButton(
                     padding: EdgeInsets.symmetric(vertical: 7),
                     minSize: 25,

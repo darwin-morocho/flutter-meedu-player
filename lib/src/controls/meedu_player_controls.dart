@@ -1,10 +1,9 @@
 import 'dart:async';
-
+import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../colors.dart';
+import 'package:video_player/video_player.dart';
 import '../meedu_video_player_controller.dart';
 import 'player_button.dart';
 import 'video_bottom_controls.dart';
@@ -54,43 +53,61 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
               duration: Duration(milliseconds: 300),
               child: LayoutBuilder(
                 builder: (_, constraints) {
+                  final _Responsive responsive = _Responsive.fromSize(
+                    Size(constraints.maxWidth, constraints.maxHeight),
+                  );
                   return Stack(
                     alignment: Alignment.bottomCenter,
                     children: <Widget>[
                       //START HEADER
+                      if (controller.header != null)
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 300),
+                          left: 0,
+                          right: 0,
+                          top: _visible ? 0 : -100,
+                          child: controller.header,
+                        ),
+                      // END HEADER
+
+                      // START CLOSED CAPTION
+                      ValueListenableBuilder(
+                        valueListenable: controller.closedCaptionEnabled,
+                        builder:
+                            (BuildContext context, bool enabled, Widget child) {
+                          if (!enabled) return Container();
+                          return AnimatedPositioned(
+                            left: 40,
+                            right: 40,
+                            bottom: visible
+                                ? responsive
+                                    .hp(controller.isFullScreen ? 20 : 25)
+                                : 0,
+                            duration: Duration(milliseconds: 300),
+                            child: ValueListenableBuilder(
+                              valueListenable: controller.position,
+                              builder: (_, __, child) => ClosedCaption(
+                                text: controller
+                                    .videoPlayerController.value.caption.text,
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: responsive.ip(2),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      // END CLOSED CAPTION
                       AnimatedPositioned(
-                        duration: Duration(milliseconds: 300),
                         left: 0,
                         right: 0,
-                        top: _visible ? 0 : -100,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                controller.backgroundColor,
-                                controller.backgroundColor.withOpacity(0.3),
-                                Colors.transparent,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              controller.title != null
-                                  ? Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: controller.title,
-                                      ),
-                                    )
-                                  : Container(),
-                            ],
-                          ),
+                        bottom: visible ? 0 : -100,
+                        duration: Duration(milliseconds: 300),
+                        child: VideoBottomControls(
+                          controller: controller,
                         ),
                       ),
-                      // END HEADER
 
                       AnimatedPositioned(
                         top:
@@ -142,15 +159,6 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                           ],
                         ),
                       ),
-                      AnimatedPositioned(
-                        left: 0,
-                        right: 0,
-                        bottom: visible ? 0 : -100,
-                        duration: Duration(milliseconds: 300),
-                        child: VideoBottomControls(
-                          controller: controller,
-                        ),
-                      )
                     ],
                   );
                 },
@@ -160,5 +168,33 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
         );
       },
     );
+  }
+}
+
+class _Responsive {
+  double _width;
+  double _height;
+  double _inchScreen;
+
+  double get width => _width;
+  double get height => _height;
+  double get inchScreen => _inchScreen;
+
+  _Responsive.fromSize(Size size) {
+    _width = size.width;
+    _height = size.height;
+    _inchScreen = math.sqrt(math.pow(width, 2) + math.pow(height, 2));
+  }
+
+  double wp(double porcentaje) {
+    return width * (porcentaje / 100);
+  }
+
+  double hp(double porcentaje) {
+    return height * (porcentaje / 100);
+  }
+
+  double ip(double porcentaje) {
+    return inchScreen * (porcentaje / 100);
   }
 }
