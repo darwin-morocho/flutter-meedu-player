@@ -2,13 +2,15 @@
 
 UI for  [video_player](https://pub.dev/packages/video_player)
 
+| | | |
+| ------------- | ------------- | ------------- |
+| <img src="https://user-images.githubusercontent.com/15864336/82267395-d9846080-9931-11ea-8abf-10f8ac3fb0f3.gif" width="200" /> | <img src="https://user-images.githubusercontent.com/15864336/82736143-f384c100-9cec-11ea-83d7-1f30158fe8e7.png" width="200" />  | <img src="https://user-images.githubusercontent.com/15864336/82736145-f54e8480-9cec-11ea-9a26-6bc6267e4fdd.png" width="200" /> |
 
 
-<img src="https://user-images.githubusercontent.com/15864336/82267395-d9846080-9931-11ea-8abf-10f8ac3fb0f3.gif" width="200" />
 
-<img src="https://user-images.githubusercontent.com/15864336/82736143-f384c100-9cec-11ea-83d7-1f30158fe8e7.png" width="200" />
 
-<img src="https://user-images.githubusercontent.com/15864336/82736145-f54e8480-9cec-11ea-9a26-6bc6267e4fdd.png" width="200" />
+
+
 
 
 
