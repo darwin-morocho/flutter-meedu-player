@@ -131,56 +131,56 @@ class _LaunchAsFullScreenPageState extends State<LaunchAsFullScreenPage>
 
   @override
   void onPlayerError(PlatformException e) {
-    // TODO: implement onPlayerError
+    
   }
 
   @override
   void onPlayerFinished() {
-    // TODO: implement onPlayerFinished
+
   }
 
   @override
   void onPlayerFullScreen(bool isFullScreen) {
-    // TODO: implement onPlayerFullScreen
+   
   }
 
   @override
   void onPlayerLoaded(Duration duration) {
-    // TODO: implement onPlayerLoaded
+   
   }
 
   @override
   void onPlayerLoading() {
-    // TODO: implement onPlayerLoading
+   
   }
 
   @override
   void onPlayerPaused(Duration position) {
-    // TODO: implement onPlayerPaused
+   
   }
 
   @override
   void onPlayerPlaying() {
-    // TODO: implement onPlayerPlaying
+  
   }
 
   @override
   void onPlayerRepeat() {
-    // TODO: implement onPlayerRepeat
+  
   }
 
   @override
   void onPlayerResumed() {
-    // TODO: implement onPlayerResumed
+   
   }
 
   @override
   void onPlayerSeekTo(Duration position) {
-    // TODO: implement onPlayerSeekTo
+
   }
 
   @override
   void onPlayerPosition(Duration position) {
-    // TODO: implement onPlayerPosition
+   
   }
 }

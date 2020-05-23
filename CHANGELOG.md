@@ -1,3 +1,6 @@
+## [0.1.0]
+* added launch as fullscreen
+
 ## [0.0.4]
 * removed unnecesary imports
 

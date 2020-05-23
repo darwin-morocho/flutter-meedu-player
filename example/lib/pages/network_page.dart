@@ -87,62 +87,38 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
   }
 
   @override
-  void onPlayerError(PlatformException e) {
-    // TODO: implement onPlayerError
-  }
+  void onPlayerError(PlatformException e) {}
 
   @override
-  void onPlayerFinished() {
-    // TODO: implement onPlayerFinished
-  }
+  void onPlayerFinished() {}
 
   @override
-  void onPlayerFullScreen(bool isFullScreen) {
-    // TODO: implement onPlayerFullScreen
-  }
+  void onPlayerFullScreen(bool isFullScreen) {}
 
   @override
-  void onPlayerLoaded(Duration duration) {
-    // TODO: implement onPlayerLoaded
-  }
+  void onPlayerLoaded(Duration duration) {}
 
   @override
-  void onPlayerLoading() {
-    // TODO: implement onPlayerLoading
-  }
+  void onPlayerLoading() {}
 
   @override
-  void onPlayerPaused(Duration position) {
-    // TODO: implement onPlayerPaused
-  }
+  void onPlayerPaused(Duration position) {}
 
   @override
-  void onPlayerPlaying() {
-    // TODO: implement onPlayerPlaying
-  }
+  void onPlayerPlaying() {}
 
   @override
-  void onPlayerRepeat() {
-    // TODO: implement onPlayerRepeat
-  }
+  void onPlayerRepeat() {}
 
   @override
-  void onPlayerResumed() {
-    // TODO: implement onPlayerResumed
-  }
+  void onPlayerResumed() {}
 
   @override
-  void onPlayerSeekTo(Duration position) {
-    // TODO: implement onPlayerSeekTo
-  }
+  void onPlayerSeekTo(Duration position) {}
 
   @override
-  void onPlayerPosition(Duration position) {
-    // TODO: implement onPlayerPosition
-  }
+  void onPlayerPosition(Duration position) {}
 
   @override
-  void onLauchAsFullScreenStopped() {
-    // TODO: implement onLauchAsFullScreenStopped
-  }
+  void onLauchAsFullScreenStopped() {}
 }
