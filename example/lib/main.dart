@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meedu_player/meedu_player.dart';
+import 'package:meedu_player_example/pages/multi_resolution_page.dart';
 import 'package:meedu_player_example/pages/network_page.dart';
 import 'package:meedu_player_example/pages/network_with_subtitle_page.dart';
 
@@ -18,9 +19,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: NetworkWithSubtitlesPage(),
+      // home: NetworkWithSubtitlesPage(),
       // home: NetworkPageDemo(),
+      home: MultiResolutionPage(),
     );
   }
 }
-

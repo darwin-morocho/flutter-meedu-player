@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/services/message_codec.dart';
 import 'package:meedu_player/meedu_player.dart';
 
 class NetworkWithSubtitlesPage extends StatefulWidget {

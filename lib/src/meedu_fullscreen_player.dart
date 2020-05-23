@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:meedu_player/src/meedu_player_provider.dart';
 import 'meedu_video_player_controller.dart';
 
 class MeeduFullscreenPlayer extends StatefulWidget {
@@ -22,6 +22,8 @@ class _MeeduFullscreenPlayerState extends State<MeeduFullscreenPlayer> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
     ]);
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle.dark.copyWith(),
@@ -38,9 +40,14 @@ class _MeeduFullscreenPlayerState extends State<MeeduFullscreenPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: widget.controller.backgroundColor,
-      body: Center(child: widget.controller.player),
+    return Hero(
+      tag: "meedu-player",
+      child: Scaffold(
+        backgroundColor: widget.controller.backgroundColor,
+        body: Center(
+          child: MeeduPlayerProvider(controller: widget.controller),
+        ),
+      ),
     );
   }
 }

@@ -31,72 +31,76 @@ class _PlayerContainer extends StatelessWidget {
 
 class MeeduPlayerProvider extends StatelessWidget {
   final MeeduPlayerController controller;
-  MeeduPlayerProvider(this.controller);
+  const MeeduPlayerProvider({Key key, @required this.controller})
+      : super(key: key);
+
+  Widget _getView(MeeduPlayerController controller) {
+    if (controller.loading) {
+      return _PlayerContainer(
+        child: SpinKitWave(
+          size: 30,
+          color: Colors.white,
+          duration: Duration(milliseconds: 1000),
+        ),
+        aspectRatio: controller.aspectRatio ?? 16 / 9,
+        backgroundColor: controller.backgroundColor,
+      );
+    } else if (controller.error) {
+      return _PlayerContainer(
+        child: Center(
+          child: Text(
+            "Failed to load video",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+        backgroundColor: controller.backgroundColor,
+        aspectRatio: controller.aspectRatio ?? 16 / 9,
+      );
+    }
+
+    final videoAspectRatio = controller.videoPlayerController.value.aspectRatio;
+
+    return _PlayerContainer(
+      child: controller.videoPlayerController.value.initialized
+          ? Center(
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: videoAspectRatio,
+                    child: VideoPlayer(
+                      controller.videoPlayerController,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : null,
+      backgroundColor: controller.backgroundColor,
+      aspectRatio: controller.aspectRatio ?? videoAspectRatio,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: this.controller,
-      child: Hero(
-        tag: 'meeduPlayer',
-        child: Container(
-          width: double.infinity,
-          child: Stack(
+    return Container(
+      width: double.infinity,
+      height: controller.isFullScreen ? double.infinity : null,
+      child: ValueListenableBuilder(
+        valueListenable: controller.status,
+        builder: (BuildContext context, MeeduPlayerStatus value, Widget child) {
+          return Stack(
             alignment: Alignment.center,
             children: <Widget>[
-              Consumer<MeeduPlayerController>(
-                builder: (_, controller, child) {
-                  if (controller.loading) {
-                    return _PlayerContainer(
-                      child: SpinKitWave(
-                        size: 30,
-                        color: Colors.white,
-                        duration: Duration(milliseconds: 1000),
-                      ),
-                      aspectRatio: controller.aspectRatio ?? 16 / 9,
-                      backgroundColor: controller.backgroundColor,
-                    );
-                  } else if (controller.error) {
-                    return _PlayerContainer(
-                      child: Center(
-                        child: Text(
-                          "Failed to load video",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      backgroundColor: controller.backgroundColor,
-                      aspectRatio: controller.aspectRatio ?? 16 / 9,
-                    );
-                  }
-
-                  final videoAspectRatio =
-                      controller.videoPlayerController.value.aspectRatio;
-
-                  return _PlayerContainer(
-                    child: Center(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          AspectRatio(
-                            aspectRatio: videoAspectRatio,
-                            child: VideoPlayer(
-                              controller.videoPlayerController,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    backgroundColor: controller.backgroundColor,
-                    aspectRatio: controller.aspectRatio ?? videoAspectRatio,
-                  );
-                },
+              _getView(controller),
+              MeeduPlayerControls(
+                controller: controller,
               ),
-              MeeduPlayerControls(),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }

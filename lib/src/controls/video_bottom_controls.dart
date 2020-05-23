@@ -102,7 +102,7 @@ class _VideoBottomControlsState extends State<VideoBottomControls> {
                     ),
                     onPressed: () {
                       if (widget.controller.isFullScreen) {
-                        widget.controller.fullScreenOff();
+                        widget.controller.fullScreenOff(context);
                       } else {
                         widget.controller.fullScreenOn(context);
                       }

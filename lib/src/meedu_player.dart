@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meedu_player/src/meedu_player_provider.dart';
 import 'meedu_video_player_controller.dart';
 
 class MeeduPlayer extends StatefulWidget {
   final MeeduPlayerController controller;
   const MeeduPlayer({
     Key key,
-    this.controller,
+    @required this.controller,
   }) : super(key: key);
   @override
   _MeeduPlayerState createState() => _MeeduPlayerState();
@@ -16,6 +17,7 @@ class _MeeduPlayerState extends State<MeeduPlayer> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkIfIsPortrait();
     });
@@ -41,7 +43,18 @@ class _MeeduPlayerState extends State<MeeduPlayer> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.controller.isFullScreen) return Container();
-    return widget.controller.player;
+    return ValueListenableBuilder(
+      valueListenable: widget.controller.status,
+      builder: (BuildContext context, MeeduPlayerStatus status, Widget child) {
+        // if (widget.controller.isFullScreen) return Container();
+        return Hero(
+          tag: "meedu-player",
+          child: Material(
+            color: widget.controller.backgroundColor,
+            child: MeeduPlayerProvider(controller: widget.controller),
+          ),
+        );
+      },
+    );
   }
 }

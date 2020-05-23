@@ -28,6 +28,7 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
   @override
   void initState() {
     super.initState();
+    _value = widget.position.value.inSeconds.toDouble();
     widget.position.addListener(this._listener);
   }
 
