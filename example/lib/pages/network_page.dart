@@ -60,6 +60,7 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Column(
           children: <Widget>[

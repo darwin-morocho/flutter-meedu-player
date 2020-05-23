@@ -57,7 +57,7 @@ class DataSource {
   }
 }
 
-class MeeduPlayerController extends ChangeNotifier {
+class MeeduPlayerController {
   final Color backgroundColor;
   final List<DeviceOrientation> orientations;
   final List<SystemUiOverlay> overlays;
@@ -68,16 +68,13 @@ class MeeduPlayerController extends ChangeNotifier {
   DataSource _dataSource;
 
   Widget _header, _bottomLeftContent, _bottomRightContent;
-  bool _finished = false,
-      _isFullScreen = false,
-      _autoPlay = false,
-      isPortrait = true;
+  bool _finished = false, _autoPlay = false, isPortrait = true;
 
   ValueNotifier<bool> _closedCaptionEnabled = ValueNotifier(true);
+  ValueNotifier<bool> _isFullScreen = ValueNotifier(false);
   ValueNotifier<Duration> _duration = ValueNotifier(Duration.zero);
   ValueNotifier<Duration> _position = ValueNotifier(Duration.zero);
   ValueNotifier<List<DurationRange>> _buffered = ValueNotifier([]);
-  MeeduPlayerProvider _player;
   double _aspectRatio;
   MeeduPlayerEventsMixin events;
   ValueNotifier<MeeduPlayerStatus> get status => _status;
@@ -86,14 +83,13 @@ class MeeduPlayerController extends ChangeNotifier {
   Widget get header => _header;
   Widget get bottomLeftContent => _bottomLeftContent;
   Widget get bottomRightContent => _bottomRightContent;
-  bool get isFullScreen => _isFullScreen;
+  ValueNotifier<bool> get isFullScreen => _isFullScreen;
   bool get autoPlay => _autoPlay;
   ValueNotifier<bool> get closedCaptionEnabled => _closedCaptionEnabled;
   ValueNotifier<Duration> get position => _position;
   ValueNotifier<Duration> get duration => _duration;
   ValueNotifier<List<DurationRange>> get buffered => _buffered;
   VideoPlayerController get videoPlayerController => _videoPlayerController;
-  MeeduPlayerProvider get player => _player;
 
   ///
   /// creates a new instance of MeeduPlayerController
@@ -104,16 +100,13 @@ class MeeduPlayerController extends ChangeNotifier {
     this.backgroundColor = darkColor,
     this.orientations = DeviceOrientation.values,
     this.overlays = SystemUiOverlay.values,
-  }) {
-    _createPlayer();
-  }
+  });
 
   // release the player
-  @override
+
   void dispose() {
     _videoPlayerController?.removeListener(this._listener);
     _videoPlayerController?.dispose();
-    super.dispose();
   }
 
   bool get loading {
@@ -160,17 +153,16 @@ class MeeduPlayerController extends ChangeNotifier {
         return MeeduFullscreenPlayer(controller: this);
       },
     );
-    _isFullScreen = true;
-    notifyListeners();
+    Future.delayed(Duration(milliseconds: 100), () {
+      _isFullScreen.value = true;
+    });
+
     this.events?.onPlayerFullScreen(true);
     await Navigator.of(context, rootNavigator: true).push(route);
-    _isFullScreen = false;
-    this.events?.onPlayerFullScreen(false);
-    _isFullScreen = false;
     SystemChrome.setPreferredOrientations(orientations);
     SystemChrome.setEnabledSystemUIOverlays(overlays);
+    _isFullScreen.value = false;
     this.events?.onPlayerFullScreen(false);
-    notifyListeners();
   }
 
   /// add the data source to the player
@@ -194,7 +186,6 @@ class MeeduPlayerController extends ChangeNotifier {
     _duration.value = Duration.zero;
     _position.value = seekTo ?? Duration.zero;
     _finished = false;
-    notifyListeners();
     this.events?.onPlayerLoading();
 
     final oldController = _videoPlayerController;
@@ -240,10 +231,8 @@ class MeeduPlayerController extends ChangeNotifier {
 
       _status.value = MeeduPlayerStatus.updating; //
 
-      oldController
-          .removeListener(this._listener); // remove the previous listeners
+      oldController?.removeListener(this._listener); // remove the previous listeners
 
-      notifyListeners();
       VideoPlayerController tmp; // create a new video controller
       if (_dataSource.type == DataSourceType.asset) {
         tmp = new VideoPlayerController.asset(
@@ -273,15 +262,14 @@ class MeeduPlayerController extends ChangeNotifier {
       if (wasPlaying) {
         await _videoPlayerController.play();
       }
-      notifyListeners();
+
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await oldController.dispose(); // dispose the previous video controller
+        await oldController?.dispose(); // dispose the previous video controller
       });
     } catch (e) {
       print(e);
       this._status.value = MeeduPlayerStatus.error;
       this.events?.onPlayerError(e);
-      notifyListeners();
     }
   }
 
@@ -296,7 +284,6 @@ class MeeduPlayerController extends ChangeNotifier {
       final Duration duration = _videoPlayerController.value.duration;
       this.events?.onPlayerLoaded(duration);
       this.duration.value = duration;
-      notifyListeners();
 
       _videoPlayerController.addListener(this._listener);
       if (seekTo != null) {
@@ -309,7 +296,6 @@ class MeeduPlayerController extends ChangeNotifier {
     } on PlatformException catch (e) {
       this._status.value = MeeduPlayerStatus.error;
       this.events?.onPlayerError(e);
-      notifyListeners();
     }
   }
 
@@ -319,7 +305,6 @@ class MeeduPlayerController extends ChangeNotifier {
     if (_status.value != MeeduPlayerStatus.playing &&
         _videoPlayerController.value.isPlaying) {
       _status.value = MeeduPlayerStatus.playing;
-      notifyListeners();
     }
     final Duration position = _videoPlayerController.value.position;
     if (_duration != null) {
@@ -328,7 +313,6 @@ class MeeduPlayerController extends ChangeNotifier {
         _finished = true;
         _status.value = MeeduPlayerStatus.finished;
         this.events?.onPlayerFinished();
-        notifyListeners();
       } else {
         this.events?.onPlayerPosition(position);
       }
@@ -342,7 +326,6 @@ class MeeduPlayerController extends ChangeNotifier {
       await _videoPlayerController.pause();
       _status.value = MeeduPlayerStatus.paused;
       this.events?.onPlayerPaused(this.position.value);
-      notifyListeners();
     }
   }
 
@@ -353,7 +336,6 @@ class MeeduPlayerController extends ChangeNotifier {
       await _videoPlayerController.play();
       _status.value = MeeduPlayerStatus.playing;
       this.events?.onPlayerResumed();
-      notifyListeners();
     }
   }
 
@@ -375,15 +357,7 @@ class MeeduPlayerController extends ChangeNotifier {
       if (_finished) {
         _finished = false;
         _status.value = MeeduPlayerStatus.playing;
-        notifyListeners();
       }
     }
-  }
-
-// create a player
-  void _createPlayer() {
-    // this._player = MeeduPlayerProvider(
-    //   controller: this,
-    // );
   }
 }

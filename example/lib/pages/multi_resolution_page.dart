@@ -19,8 +19,6 @@ class MultiResolutionPage extends StatefulWidget {
 }
 
 class _MultiResolutionPageState extends State<MultiResolutionPage> {
-  // https://content.jwplatform.com/manifests/yp34SRmf.m3u8
-
   ValueNotifier<Quality> _quality;
   DataSource _dataSource;
 
@@ -37,7 +35,9 @@ class _MultiResolutionPageState extends State<MultiResolutionPage> {
     ),
   ];
 
-  final MeeduPlayerController _controller = MeeduPlayerController();
+  final MeeduPlayerController _controller = MeeduPlayerController(
+    backgroundColor: Colors.black,
+  );
 
   @override
   void initState() {
@@ -115,6 +115,7 @@ class _MultiResolutionPageState extends State<MultiResolutionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: MeeduPlayer(
           controller: _controller,

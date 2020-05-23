@@ -93,7 +93,7 @@ class _VideoBottomControlsState extends State<VideoBottomControls> {
                     padding: EdgeInsets.symmetric(vertical: 7),
                     minSize: 25,
                     child: SvgPicture.asset(
-                      widget.controller.isFullScreen
+                      widget.controller.isFullScreen.value
                           ? 'assets/icons/fullscreen-off.svg'
                           : 'assets/icons/fullscreen-on.svg',
                       package: 'meedu_player',
@@ -101,7 +101,7 @@ class _VideoBottomControlsState extends State<VideoBottomControls> {
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      if (widget.controller.isFullScreen) {
+                      if (widget.controller.isFullScreen.value) {
                         widget.controller.fullScreenOff(context);
                       } else {
                         widget.controller.fullScreenOn(context);

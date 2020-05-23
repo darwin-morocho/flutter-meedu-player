@@ -98,7 +98,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                         left: 40,
                         right: 40,
                         bottom: visible
-                            ? responsive.hp(controller.isFullScreen ? 20 : 25)
+                            ? responsive.hp(controller.isFullScreen.value ? 20 : 25)
                             : 0,
                         duration: Duration(milliseconds: 300),
                         child: ValueListenableBuilder(

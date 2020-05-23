@@ -131,6 +131,7 @@ Great
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: MeeduPlayer(
           controller: this._controller,

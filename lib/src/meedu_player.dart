@@ -46,13 +46,18 @@ class _MeeduPlayerState extends State<MeeduPlayer> with WidgetsBindingObserver {
     return ValueListenableBuilder(
       valueListenable: widget.controller.status,
       builder: (BuildContext context, MeeduPlayerStatus status, Widget child) {
-        // if (widget.controller.isFullScreen) return Container();
-        return Hero(
-          tag: "meedu-player",
-          child: Material(
-            color: widget.controller.backgroundColor,
-            child: MeeduPlayerProvider(controller: widget.controller),
-          ),
+        return ValueListenableBuilder(
+          valueListenable: widget.controller.isFullScreen,
+          builder: (BuildContext context, bool isFullScreen, Widget child) {
+            if (isFullScreen) return Container();
+            return Hero(
+              tag: "meedu-player",
+              child: Material(
+                color: widget.controller.backgroundColor,
+                child: MeeduPlayerProvider(controller: widget.controller),
+              ),
+            );
+          },
         );
       },
     );
