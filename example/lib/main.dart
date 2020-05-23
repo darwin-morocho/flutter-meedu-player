@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meedu_player/meedu_player.dart';
+import 'package:meedu_player_example/pages/launch_as_full_screen_page.dart';
 import 'package:meedu_player_example/pages/multi_resolution_page.dart';
 import 'package:meedu_player_example/pages/network_page.dart';
 import 'package:meedu_player_example/pages/network_with_subtitle_page.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
       "simple": (_) => NetworkPageDemo(),
       "multi": (_) => MultiResolutionPage(),
       "subtitles": (_) => NetworkWithSubtitlesPage(),
+      "launch as fullscreen": (_) => LaunchAsFullScreenPage(),
     };
     return MaterialApp(
       title: 'Flutter Demo',

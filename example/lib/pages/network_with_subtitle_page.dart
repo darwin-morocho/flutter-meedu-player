@@ -14,6 +14,28 @@ class _NetworkWithSubtitlesPageState extends State<NetworkWithSubtitlesPage> {
 
   ValueNotifier<bool> _subtitlesEnabled = ValueNotifier(true);
 
+  Widget get ccButton {
+    return FlatButton(
+      child: ValueListenableBuilder(
+        valueListenable: this._subtitlesEnabled,
+        builder: (BuildContext context, bool enabled, Widget child) {
+          return Text(
+            "CC",
+            style: TextStyle(
+              color: Colors.white.withOpacity(
+                enabled ? 1 : 0.4,
+              ),
+            ),
+          );
+        },
+      ),
+      onPressed: () {
+        _subtitlesEnabled.value = !_subtitlesEnabled.value;
+        this._controller.isClosedCaptionEnabled(_subtitlesEnabled.value);
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,25 +66,7 @@ class _NetworkWithSubtitlesPageState extends State<NetworkWithSubtitlesPage> {
         type: DataSourceType.network,
         closedCaptionFile: this._loadCaptions(),
       ),
-      bottomLeftContent: FlatButton(
-        child: ValueListenableBuilder(
-          valueListenable: this._subtitlesEnabled,
-          builder: (BuildContext context, bool enabled, Widget child) {
-            return Text(
-              "CC",
-              style: TextStyle(
-                color: Colors.white.withOpacity(
-                  enabled ? 1 : 0.4,
-                ),
-              ),
-            );
-          },
-        ),
-        onPressed: () {
-          _subtitlesEnabled.value = !_subtitlesEnabled.value;
-          this._controller.isClosedCaptionEnabled(_subtitlesEnabled.value);
-        },
-      ),
+      bottomLeftContent: ccButton,
     );
   }
 

@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'package:video_player/video_player.dart';
 import '../meedu_video_player_controller.dart';
 import 'player_button.dart';
@@ -49,11 +47,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
       );
     }
 
-    if (controller.loading || controller.error) return Container(height: 0);
-
-    final visible = _visible ||
-        (controller.loaded && !controller.autoPlay) ||
-        controller.finished;
+    final visible = _visible || (controller.loaded) || controller.finished;
 
     return Positioned.fill(
       child: GestureDetector(
@@ -76,14 +70,31 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                 alignment: Alignment.bottomCenter,
                 children: <Widget>[
                   //START HEADER
-                  if (controller.header != null)
-                    AnimatedPositioned(
-                      duration: Duration(milliseconds: 300),
-                      left: 0,
-                      right: 0,
-                      top: _visible ? 0 : -100,
-                      child: controller.header,
+                  AnimatedPositioned(
+                    duration: Duration(milliseconds: 300),
+                    left: 0,
+                    right: 0,
+                    top: _visible ? 0 : -100,
+                    child: Row(
+                      children: <Widget>[
+                        if (controller.asFullScreen)
+                          IconButton(
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        if (controller.header != null)
+                          Expanded(
+                            child: controller.header,
+                          )
+                      ],
                     ),
+                  ),
+
                   // END HEADER
 
                   // START CLOSED CAPTION
@@ -126,7 +137,10 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                   ),
 
                   AnimatedPositioned(
-                    top: (visible ? 1 : -1) * constraints.maxHeight / 2 - 40,
+                    top: ((visible && !controller.loading) ? 1 : -1) *
+                            constraints.maxHeight /
+                            2 -
+                        40,
                     duration: Duration(milliseconds: 300),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

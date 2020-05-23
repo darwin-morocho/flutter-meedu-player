@@ -58,6 +58,10 @@ class MeeduPlayerProvider extends StatelessWidget {
       );
     }
 
+    if (controller.stopped) {
+      return Container();
+    }
+
     final videoAspectRatio = controller.videoPlayerController.value.aspectRatio;
 
     return _PlayerContainer(
@@ -88,7 +92,8 @@ class MeeduPlayerProvider extends StatelessWidget {
       builder: (BuildContext context, bool isFullScreen, Widget child) {
         return Container(
           width: double.infinity,
-          height: isFullScreen ? double.infinity : null,
+          height:
+              isFullScreen || controller.asFullScreen ? double.infinity : null,
           child: ValueListenableBuilder(
             valueListenable: controller.status,
             builder:

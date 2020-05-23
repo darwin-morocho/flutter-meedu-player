@@ -12,4 +12,5 @@ mixin MeeduPlayerEventsMixin {
   void onPlayerSeekTo(Duration position);
   void onPlayerError(PlatformException e);
   void onPlayerFullScreen(bool isFullScreen);
+  void onLauchAsFullScreenStopped();
 }

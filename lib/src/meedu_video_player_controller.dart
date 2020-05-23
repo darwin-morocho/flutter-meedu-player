@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/colors.dart';
 import 'package:video_player/video_player.dart';
 import 'meedu_fullscreen_player.dart';
@@ -18,43 +18,6 @@ enum MeeduPlayerStatus {
   error
 }
 
-class DataSource {
-  final File file;
-  final String dataSource, package;
-  final DataSourceType type;
-  final VideoFormat formatHint;
-  final Future<ClosedCaptionFile> closedCaptionFile;
-
-  DataSource({
-    this.file,
-    this.dataSource,
-    @required this.type,
-    this.formatHint,
-    this.package,
-    this.closedCaptionFile,
-  })  : assert(type != null),
-        assert((type == DataSourceType.file && file != null) ||
-            dataSource != null);
-
-  DataSource copyWith({
-    File file,
-    String dataSource,
-    String package,
-    DataSourceType type,
-    VideoFormat formatHint,
-    Future<ClosedCaptionFile> closedCaptionFile,
-  }) {
-    return DataSource(
-      file: file ?? this.file,
-      dataSource: dataSource ?? this.dataSource,
-      type: type ?? this.type,
-      package: package ?? this.package,
-      formatHint: formatHint ?? this.formatHint,
-      closedCaptionFile: closedCaptionFile ?? this.closedCaptionFile,
-    );
-  }
-}
-
 class MeeduPlayerController {
   final Color backgroundColor;
   final List<DeviceOrientation> orientations;
@@ -63,10 +26,9 @@ class MeeduPlayerController {
   VideoPlayerController _videoPlayerController;
   ValueNotifier<MeeduPlayerStatus> _status =
       ValueNotifier(MeeduPlayerStatus.loading);
-  DataSource _dataSource;
 
   Widget _header, _bottomLeftContent, _bottomRightContent;
-  bool _finished = false, _autoPlay = false, isPortrait = true;
+  bool _finished = false, isPortrait = true, _asFullScreen = false;
 
   ValueNotifier<bool> _closedCaptionEnabled = ValueNotifier(true);
   ValueNotifier<bool> _isFullScreen = ValueNotifier(false);
@@ -76,13 +38,12 @@ class MeeduPlayerController {
   double _aspectRatio;
   MeeduPlayerEventsMixin events;
   ValueNotifier<MeeduPlayerStatus> get status => _status;
-  DataSource get dataSource => _dataSource;
   double get aspectRatio => _aspectRatio;
   Widget get header => _header;
   Widget get bottomLeftContent => _bottomLeftContent;
   Widget get bottomRightContent => _bottomRightContent;
   ValueNotifier<bool> get isFullScreen => _isFullScreen;
-  bool get autoPlay => _autoPlay;
+  bool get asFullScreen => _asFullScreen;
   ValueNotifier<bool> get closedCaptionEnabled => _closedCaptionEnabled;
   ValueNotifier<Duration> get position => _position;
   ValueNotifier<Duration> get duration => _duration;
@@ -131,8 +92,36 @@ class MeeduPlayerController {
     return _status.value == MeeduPlayerStatus.finished;
   }
 
+  bool get stopped {
+    return _status.value == MeeduPlayerStatus.stopped;
+  }
+
   bool get error {
     return _status.value == MeeduPlayerStatus.error;
+  }
+
+  /// create a new video player controller
+  VideoPlayerController _createVideoController(DataSource dataSource) {
+    VideoPlayerController tmp; // create a new video controller
+    if (dataSource.type == DataSourceType.asset) {
+      tmp = new VideoPlayerController.asset(
+        dataSource.dataSource,
+        closedCaptionFile: dataSource.closedCaptionFile,
+        package: dataSource.package,
+      );
+    } else if (dataSource.type == DataSourceType.network) {
+      tmp = new VideoPlayerController.network(
+        dataSource.dataSource,
+        formatHint: dataSource.formatHint,
+        closedCaptionFile: dataSource.closedCaptionFile,
+      );
+    } else {
+      tmp = new VideoPlayerController.file(
+        dataSource.file,
+        closedCaptionFile: dataSource.closedCaptionFile,
+      );
+    }
+    return tmp;
   }
 
   isClosedCaptionEnabled(bool enabled) {
@@ -145,7 +134,7 @@ class MeeduPlayerController {
   }
 
   /// go to fullscreen
-  fullScreenOn(BuildContext context) async {
+  Future<void> fullScreenOn(BuildContext context) async {
     final TransitionRoute<Null> route = PageRouteBuilder<Null>(
       pageBuilder: (_, __, ___) {
         return MeeduFullscreenPlayer(controller: this);
@@ -163,6 +152,45 @@ class MeeduPlayerController {
     this.events?.onPlayerFullScreen(false);
   }
 
+  /// launchs the player as a fullscreen page
+  launchAsFullScreen(
+    BuildContext context, {
+    @required DataSource dataSource,
+    bool autoPlay = false,
+    Widget header,
+    Widget bottomRightContent,
+    Widget bottomLeftContent,
+    Duration seekTo,
+  }) async {
+    this._asFullScreen = true;
+    this._status.value = MeeduPlayerStatus.loading;
+    this._header = header;
+    this._bottomLeftContent = bottomLeftContent;
+    this._bottomRightContent = bottomRightContent;
+    _duration.value = Duration.zero;
+    _position.value = seekTo ?? Duration.zero;
+    _finished = false;
+    this.events?.onPlayerLoading();
+    _videoPlayerController = this._createVideoController(dataSource);
+    final TransitionRoute<Null> route = PageRouteBuilder<Null>(
+      pageBuilder: (_, __, ___) {
+        return MeeduFullscreenPlayer(controller: this);
+      },
+    );
+    Navigator.of(context, rootNavigator: true).push(route).then((value) {
+      this.events?.onLauchAsFullScreenStopped();
+      SystemChrome.setPreferredOrientations(orientations);
+      SystemChrome.setEnabledSystemUIOverlays(overlays);
+      _status.value = MeeduPlayerStatus.stopped;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await _videoPlayerController?.pause();
+        _videoPlayerController?.removeListener(this._listener);
+        _videoPlayerController?.dispose();
+      });
+    });
+    await this._initialize(seekTo: seekTo, autoPlay: autoPlay);
+  }
+
   /// add the data source to the player
   /// [seekTo] start the player since the position provided
   /// [aspectRatio] aspect ratio of the player container
@@ -176,7 +204,6 @@ class MeeduPlayerController {
     Duration seekTo,
   }) async {
     this._aspectRatio = aspectRatio;
-    _dataSource = dataSource;
     this._status.value = MeeduPlayerStatus.loading;
     this._header = header;
     this._bottomLeftContent = bottomLeftContent;
@@ -187,79 +214,35 @@ class MeeduPlayerController {
     this.events?.onPlayerLoading();
 
     final oldController = _videoPlayerController;
-
-    if (_dataSource.type == DataSourceType.asset) {
-      _videoPlayerController = new VideoPlayerController.asset(
-        _dataSource.dataSource,
-        closedCaptionFile: _dataSource.closedCaptionFile,
-        package: _dataSource.package,
-      );
-    } else if (_dataSource.type == DataSourceType.network) {
-      _videoPlayerController = new VideoPlayerController.network(
-        _dataSource.dataSource,
-        formatHint: _dataSource.formatHint,
-        closedCaptionFile: _dataSource.closedCaptionFile,
-      );
-    } else {
-      _videoPlayerController = new VideoPlayerController.file(
-        _dataSource.file,
-        closedCaptionFile: _dataSource.closedCaptionFile,
-      );
-    }
-
+    _videoPlayerController = this._createVideoController(dataSource);
     // Registering a callback for the end of next frame
     // to dispose of an old controller
-    // (which won't be used anymore after calling setState)
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       oldController?.removeListener(this._listener);
       await oldController?.dispose();
     });
-
-    this._autoPlay = autoPlay;
-    await this._initialize(seekTo: seekTo);
+    await this._initialize(seekTo: seekTo, autoPlay: autoPlay);
   }
 
   /// use this method to change the video resolution, change subtitles
-  Future<void> updateDataSource(DataSource datasource) async {
+  Future<void> updateDataSource(
+    DataSource dataSource, {
+    Duration seekTo,
+  }) async {
     try {
-      final bool wasPlaying =
-          _videoPlayerController.value.isPlaying; // if the player was playing
-      final oldController =
-          _videoPlayerController; // get the current video controller
-
+      // if the player was playing
+      final bool wasPlaying = _videoPlayerController.value.isPlaying;
+      // get the current video controller
+      final oldController = _videoPlayerController;
       _status.value = MeeduPlayerStatus.updating; //
 
-      oldController?.removeListener(this._listener); // remove the previous listeners
+      // remove the previous listeners
 
-      VideoPlayerController tmp; // create a new video controller
-      if (_dataSource.type == DataSourceType.asset) {
-        tmp = new VideoPlayerController.asset(
-          _dataSource.dataSource,
-          closedCaptionFile: _dataSource.closedCaptionFile,
-          package: _dataSource.package,
-        );
-      } else if (_dataSource.type == DataSourceType.network) {
-        tmp = new VideoPlayerController.network(
-          _dataSource.dataSource,
-          formatHint: _dataSource.formatHint,
-          closedCaptionFile: _dataSource.closedCaptionFile,
-        );
-      } else {
-        tmp = new VideoPlayerController.file(
-          _dataSource.file,
-          closedCaptionFile: _dataSource.closedCaptionFile,
-        );
-      }
-      await tmp.initialize();
-      _videoPlayerController = tmp;
-      _videoPlayerController.addListener(this._listener);
-      await _videoPlayerController.seekTo(_position.value);
-      _status.value =
-          wasPlaying ? MeeduPlayerStatus.playing : MeeduPlayerStatus.paused;
-
-      if (wasPlaying) {
-        await _videoPlayerController.play();
-      }
+      oldController?.removeListener(this._listener);
+      _videoPlayerController = this._createVideoController(dataSource);
+      _initialize(seekTo: seekTo ?? _position.value, autoPlay: wasPlaying);
+      // _status.value =
+      //     wasPlaying ? MeeduPlayerStatus.playing : MeeduPlayerStatus.paused;
 
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await oldController?.dispose(); // dispose the previous video controller
@@ -274,6 +257,7 @@ class MeeduPlayerController {
   // iniitialize the player
   Future<void> _initialize({
     Duration seekTo,
+    bool autoPlay = false,
   }) async {
     try {
       if (_videoPlayerController == null) return;
@@ -287,7 +271,7 @@ class MeeduPlayerController {
       if (seekTo != null) {
         await _videoPlayerController.seekTo(seekTo);
       }
-      if (this._autoPlay) {
+      if (autoPlay) {
         await _videoPlayerController.play();
         this.events?.onPlayerPlaying();
       }

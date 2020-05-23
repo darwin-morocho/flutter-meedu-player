@@ -40,14 +40,18 @@ class _MeeduFullscreenPlayerState extends State<MeeduFullscreenPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final Scaffold scaffold = Scaffold(
+      backgroundColor: widget.controller.backgroundColor,
+      body: Center(
+        child: MeeduPlayerProvider(controller: widget.controller),
+      ),
+    );
+
+    if (widget.controller.asFullScreen) return scaffold;
+
     return Hero(
       tag: "meedu-player",
-      child: Scaffold(
-        backgroundColor: widget.controller.backgroundColor,
-        body: Center(
-          child: MeeduPlayerProvider(controller: widget.controller),
-        ),
-      ),
+      child: scaffold,
     );
   }
 }

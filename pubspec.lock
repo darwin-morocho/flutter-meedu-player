@@ -86,27 +86,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  google_fonts:
-    dependency: "direct main"
-    description:
-      name: google_fonts
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.12.1"
-  http_parser:
-    dependency: transitive
-    description:
-      name: http_parser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.4"
   image:
     dependency: transitive
     description:
@@ -128,13 +107,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
-  nested:
-    dependency: transitive
-    description:
-      name: nested
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4"
   path:
     dependency: transitive
     description:
@@ -156,34 +128,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4"
-  path_provider:
-    dependency: transitive
-    description:
-      name: path_provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.6.8"
-  path_provider_macos:
-    dependency: transitive
-    description:
-      name: path_provider_macos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4+2"
-  path_provider_platform_interface:
-    dependency: transitive
-    description:
-      name: path_provider_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.9.0"
   petitparser:
     dependency: transitive
     description:
@@ -191,27 +135,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
-  platform:
-    dependency: transitive
-    description:
-      name: platform
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.1"
-  plugin_platform_interface:
-    dependency: transitive
-    description:
-      name: plugin_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
-  provider:
-    dependency: "direct main"
-    description:
-      name: provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.2"
   quiver:
     dependency: transitive
     description:
@@ -310,4 +233,4 @@ packages:
     version: "3.6.1"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"

@@ -39,6 +39,23 @@ class _MultiResolutionPageState extends State<MultiResolutionPage> {
     backgroundColor: Colors.black,
   );
 
+  Widget get qualityButton {
+    return FlatButton(
+      onPressed: this._showUpdate,
+      child: ValueListenableBuilder(
+        valueListenable: this._quality,
+        builder: (BuildContext context, Quality quality, Widget child) {
+          return Text(
+            quality.name,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,20 +76,7 @@ class _MultiResolutionPageState extends State<MultiResolutionPage> {
   _set() {
     _controller.setDataSource(
       dataSource: _dataSource,
-      bottomLeftContent: FlatButton(
-        onPressed: this._showUpdate,
-        child: ValueListenableBuilder(
-          valueListenable: this._quality,
-          builder: (BuildContext context, Quality quality, Widget child) {
-            return Text(
-              quality.name,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            );
-          },
-        ),
-      ),
+      bottomLeftContent: qualityButton,
       autoPlay: true,
     );
   }

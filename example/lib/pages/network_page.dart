@@ -140,4 +140,9 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
   void onPlayerPosition(Duration position) {
     // TODO: implement onPlayerPosition
   }
+
+  @override
+  void onLauchAsFullScreenStopped() {
+    // TODO: implement onLauchAsFullScreenStopped
+  }
 }

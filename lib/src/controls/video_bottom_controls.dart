@@ -58,55 +58,58 @@ class _VideoBottomControlsState extends State<VideoBottomControls> {
               Row(
                 children: <Widget>[
                   // START TIMER
-                  ValueListenableBuilder(
-                    valueListenable: widget.controller.position,
-                    builder:
-                        (BuildContext context, Duration value, Widget child) {
-                      return Text(
-                        "${printDuration2(value.inSeconds)} / ${printDuration2(widget.controller.duration.value.inSeconds)}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      );
-                    },
-                  ),
-                  // END TIMER
-                  if (widget.controller.bottomLeftContent != null) ...[
+                  ...[
+                    ValueListenableBuilder(
+                      valueListenable: widget.controller.position,
+                      builder:
+                          (BuildContext context, Duration value, Widget child) {
+                        return Text(
+                          "${printDuration2(value.inSeconds)} / ${printDuration2(widget.controller.duration.value.inSeconds)}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(
                       width: 5,
-                    ),
-                    widget.controller.bottomLeftContent
+                      height: 30,
+                    )
                   ],
+                  // END TIMER
+                  if (widget.controller.bottomLeftContent != null)
+                    widget.controller.bottomLeftContent
                 ],
               ),
               Row(
                 children: <Widget>[
-                  if (widget.controller.bottomRightContent != null) ...[
+                  if (widget.controller.bottomRightContent != null)
                     widget.controller.bottomRightContent,
+                  if (!widget.controller.asFullScreen) ...[
                     SizedBox(
                       width: 5,
+                    ),
+                    CupertinoButton(
+                      padding: EdgeInsets.symmetric(vertical: 7),
+                      minSize: 25,
+                      child: SvgPicture.asset(
+                        widget.controller.isFullScreen.value
+                            ? 'assets/icons/fullscreen-off.svg'
+                            : 'assets/icons/fullscreen-on.svg',
+                        package: 'meedu_player',
+                        width: 20,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        if (widget.controller.isFullScreen.value) {
+                          widget.controller.fullScreenOff(context);
+                        } else {
+                          widget.controller.fullScreenOn(context);
+                        }
+                      },
                     )
                   ],
-                  CupertinoButton(
-                    padding: EdgeInsets.symmetric(vertical: 7),
-                    minSize: 25,
-                    child: SvgPicture.asset(
-                      widget.controller.isFullScreen.value
-                          ? 'assets/icons/fullscreen-off.svg'
-                          : 'assets/icons/fullscreen-on.svg',
-                      package: 'meedu_player',
-                      width: 20,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      if (widget.controller.isFullScreen.value) {
-                        widget.controller.fullScreenOff(context);
-                      } else {
-                        widget.controller.fullScreenOn(context);
-                      }
-                    },
-                  ),
                 ],
               )
             ],
