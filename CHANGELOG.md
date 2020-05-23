@@ -1,3 +1,6 @@
+## [0.0.3+1]
+* added exmaples
+
 ## [0.0.3]
 * added suport to subtitles (STR) and switch video resolution
 

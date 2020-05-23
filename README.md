@@ -31,7 +31,7 @@ Add the following entry to your Info.plist file, located in `<project root>/ios/
 </dict>
 ```
 
-# Example
+# Example (check the example folder to more demos)
 
 ```dart
 import 'package:meedu_player/meedu_player.dart';
