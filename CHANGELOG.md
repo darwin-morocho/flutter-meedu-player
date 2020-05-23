@@ -1,3 +1,6 @@
+## [0.1.0+1]
+* added license
+
 ## [0.1.0]
 * added launch as fullscreen
 
