@@ -3,8 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:meedu_player/src/meedu_player_provider.dart';
-import 'package:provider/provider.dart';
+
 import 'package:video_player/video_player.dart';
 import '../meedu_video_player_controller.dart';
 import 'player_button.dart';
@@ -21,7 +20,6 @@ class MeeduPlayerControls extends StatefulWidget {
 
 class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
     with SingleTickerProviderStateMixin {
-  Timer _timer;
   bool _visible = false;
 
   @override
@@ -98,7 +96,8 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                         left: 40,
                         right: 40,
                         bottom: visible
-                            ? responsive.hp(controller.isFullScreen.value ? 20 : 25)
+                            ? responsive
+                                .hp(controller.isFullScreen.value ? 20 : 25)
                             : 0,
                         duration: Duration(milliseconds: 300),
                         child: ValueListenableBuilder(

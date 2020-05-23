@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../colors.dart';
 import '../extras.dart';
 import '../meedu_video_player_controller.dart';
 import 'video_progress_bar.dart';
@@ -22,7 +21,7 @@ class _VideoBottomControlsState extends State<VideoBottomControls> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.controller.status == MeeduPlayerStatus.loading)
+    if (widget.controller.status.value == MeeduPlayerStatus.loading)
       return Container();
 
     return Container(

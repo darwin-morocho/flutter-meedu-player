@@ -1,3 +1,6 @@
+## [0.0.4]
+* removed unnecesary imports
+
 ## [0.0.3+1]
 * added exmaples
 

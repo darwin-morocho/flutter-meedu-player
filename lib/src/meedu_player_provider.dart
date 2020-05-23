@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-
 import 'controls/meedu_player_controls.dart';
 import 'meedu_video_player_controller.dart';
 

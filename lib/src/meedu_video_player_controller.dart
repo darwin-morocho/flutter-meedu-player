@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meedu_player/src/colors.dart';
 import 'package:video_player/video_player.dart';
 import 'meedu_fullscreen_player.dart';
-import 'meedu_player_provider.dart';
 import 'player_events_mixin.dart';
 
 enum MeeduPlayerStatus {

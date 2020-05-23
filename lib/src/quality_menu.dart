@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'colors.dart';
 
-
 class QualityMenu extends StatefulWidget {
   QualityMenu({Key key}) : super(key: key);
 
