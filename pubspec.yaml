@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  meta: ^1.1.8
   video_player: ">=0.10.11 <2.0.0"
   flutter_svg: ">=0.17.4 <1.0.0"
   flutter_spinkit: ">=4.0.0 <5.0.0"
