@@ -1,3 +1,6 @@
+## [0.1.2]
+* updated examples
+
 ## [0.1.1]
 * added fullscreen events listener
 

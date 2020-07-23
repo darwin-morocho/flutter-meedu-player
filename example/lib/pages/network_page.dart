@@ -93,7 +93,19 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
   void onPlayerFinished() {}
 
   @override
-  void onPlayerFullScreen(bool isFullScreen) {}
+  void onPlayerFullScreen(bool isFullScreen) {
+    if (isFullScreen) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
+  }
 
   @override
   void onPlayerLoaded(Duration duration) {}

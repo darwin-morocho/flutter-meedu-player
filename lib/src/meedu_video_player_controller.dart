@@ -142,9 +142,9 @@ class MeeduPlayerController {
     );
     Future.delayed(Duration(milliseconds: 100), () {
       _isFullScreen.value = true;
+      this.events?.onPlayerFullScreen(true);
     });
 
-    this.events?.onPlayerFullScreen(true);
     await Navigator.of(context, rootNavigator: true).push(route);
     SystemChrome.setPreferredOrientations(orientations);
     SystemChrome.setEnabledSystemUIOverlays(overlays);
