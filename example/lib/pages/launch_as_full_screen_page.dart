@@ -130,57 +130,48 @@ class _LaunchAsFullScreenPageState extends State<LaunchAsFullScreenPage>
   }
 
   @override
-  void onPlayerError(PlatformException e) {
-    
-  }
+  void onPlayerError(PlatformException e) {}
 
   @override
-  void onPlayerFinished() {
-
-  }
+  void onPlayerFinished() {}
 
   @override
   void onPlayerFullScreen(bool isFullScreen) {
-   
+    print("object 🥶 $isFullScreen");
+    if (isFullScreen) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
   }
 
   @override
-  void onPlayerLoaded(Duration duration) {
-   
-  }
+  void onPlayerLoaded(Duration duration) {}
 
   @override
-  void onPlayerLoading() {
-   
-  }
+  void onPlayerLoading() {}
 
   @override
-  void onPlayerPaused(Duration position) {
-   
-  }
+  void onPlayerPaused(Duration position) {}
 
   @override
-  void onPlayerPlaying() {
-  
-  }
+  void onPlayerPlaying() {}
 
   @override
-  void onPlayerRepeat() {
-  
-  }
+  void onPlayerRepeat() {}
 
   @override
-  void onPlayerResumed() {
-   
-  }
+  void onPlayerResumed() {}
 
   @override
-  void onPlayerSeekTo(Duration position) {
-
-  }
+  void onPlayerSeekTo(Duration position) {}
 
   @override
-  void onPlayerPosition(Duration position) {
-   
-  }
+  void onPlayerPosition(Duration position) {}
 }

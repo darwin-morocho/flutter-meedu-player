@@ -171,6 +171,7 @@ class MeeduPlayerController {
     _position.value = seekTo ?? Duration.zero;
     _finished = false;
     this.events?.onPlayerLoading();
+    this.events?.onPlayerFullScreen(true);
     _videoPlayerController = this._createVideoController(dataSource);
     final TransitionRoute<Null> route = PageRouteBuilder<Null>(
       pageBuilder: (_, __, ___) {
@@ -186,6 +187,7 @@ class MeeduPlayerController {
         await _videoPlayerController?.pause();
         _videoPlayerController?.removeListener(this._listener);
         _videoPlayerController?.dispose();
+        this.events?.onPlayerFullScreen(false);
       });
     });
     await this._initialize(seekTo: seekTo, autoPlay: autoPlay);
