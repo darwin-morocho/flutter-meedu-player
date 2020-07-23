@@ -137,7 +137,6 @@ class _LaunchAsFullScreenPageState extends State<LaunchAsFullScreenPage>
 
   @override
   void onPlayerFullScreen(bool isFullScreen) {
-    print("object 🥶 $isFullScreen");
     if (isFullScreen) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
