@@ -1,3 +1,6 @@
+## [0.1.1]
+* added fullscreen events listener
+
 ## [0.1.0+1]
 * added license
 
