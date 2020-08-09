@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class PlayerButton extends StatelessWidget {
   final double size;
@@ -26,7 +25,7 @@ class PlayerButton extends StatelessWidget {
           height: this.size,
           padding: EdgeInsets.all(size * 0.25),
           color: this.color ?? Color(0xffd2d2d2).withOpacity(0.1),
-          child: SvgPicture.asset(
+          child: Image.asset(
             this.asset,
             color: Colors.white,
             package: 'meedu_player',

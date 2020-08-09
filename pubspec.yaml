@@ -1,17 +1,17 @@
 name: meedu_player
 description: A new Flutter UI video controls for the flutter video_player plugin.
-version: 0.1.2
+version: 0.2.0
 homepage: https://github.com/darwin-morocho/flutter-meedu-player
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.12.0 <2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   meta: ^1.1.8
   video_player: ">=0.10.11 <2.0.0"
-  flutter_svg: ">=0.17.4 <1.0.0"
   flutter_spinkit: ">=4.0.0 <5.0.0"
 
 dev_dependencies:
@@ -25,13 +25,13 @@ dev_dependencies:
 flutter:
   # To add assets to your package, add an assets section, like this:
   assets:
-    - packages/meedu_player/assets/icons/play.svg
-    - packages/meedu_player/assets/icons/paused.svg
-    - packages/meedu_player/assets/icons/fullscreen-on.svg
-    - packages/meedu_player/assets/icons/fullscreen-off.svg
-    - packages/meedu_player/assets/icons/fast-forward.svg
-    - packages/meedu_player/assets/icons/fast-rewind.svg
-    - packages/meedu_player/assets/icons/repeat.svg
+    - packages/meedu_player/assets/icons/play.png
+    - packages/meedu_player/assets/icons/paused.png
+    - packages/meedu_player/assets/icons/fullscreen-on.png
+    - packages/meedu_player/assets/icons/fullscreen-off.png
+    - packages/meedu_player/assets/icons/fast-forward.png
+    - packages/meedu_player/assets/icons/fast-rewind.png
+    - packages/meedu_player/assets/icons/repeat.png
   #
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages

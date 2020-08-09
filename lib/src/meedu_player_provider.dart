@@ -87,24 +87,24 @@ class MeeduPlayerProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<bool>(
       valueListenable: controller.isFullScreen,
-      builder: (BuildContext context, bool isFullScreen, Widget child) {
+      builder: (_, bool isFullScreen, __) {
         return Container(
           width: double.infinity,
           height:
               isFullScreen || controller.asFullScreen ? double.infinity : null,
-          child: ValueListenableBuilder(
+          child: ValueListenableBuilder<MeeduPlayerStatus>(
             valueListenable: controller.status,
-            builder:
-                (BuildContext context, MeeduPlayerStatus value, Widget child) {
+            builder: (_, __, ___) {
               return Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
                   _getView(controller),
-                  MeeduPlayerControls(
-                    controller: controller,
-                  ),
+                  if (controller.videoPlayerController != null)
+                    MeeduPlayerControls(
+                      controller: controller,
+                    ),
                 ],
               );
             },

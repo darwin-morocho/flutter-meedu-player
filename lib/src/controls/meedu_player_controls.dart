@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class MeeduPlayerControls extends StatefulWidget {
 class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
     with SingleTickerProviderStateMixin {
   bool _visible = false;
+  Timer _timer;
 
   @override
   void initState() {
@@ -27,8 +29,19 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
 
   @override
   void dispose() {
-    // _timer?.cancel();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  _setTimer() {
+    if (_visible) {
+      _timer?.cancel();
+      _timer = Timer(Duration(seconds: 4), () {
+        _visible = false;
+        _timer = null;
+        setState(() {});
+      });
+    }
   }
 
   @override
@@ -53,6 +66,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
       child: GestureDetector(
         onTap: () {
           _visible = !_visible;
+          _setTimer();
           setState(() {});
         },
         child: AnimatedContainer(
@@ -141,7 +155,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                             constraints.maxHeight /
                             2 -
                         40,
-                    duration: Duration(milliseconds: 300),
+                    duration: Duration(milliseconds: 500),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -153,7 +167,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                               controller.seekTo(Duration(seconds: to));
                             }
                           },
-                          asset: 'assets/icons/fast-rewind.svg',
+                          asset: 'assets/icons/fast-rewind.png',
                         ),
                         SizedBox(width: 25),
                         PlayerButton(
@@ -167,10 +181,10 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                             }
                           },
                           asset: controller.finished
-                              ? 'assets/icons/repeat.svg'
+                              ? 'assets/icons/repeat.png'
                               : (controller.playing
-                                  ? 'assets/icons/paused.svg'
-                                  : 'assets/icons/play.svg'),
+                                  ? 'assets/icons/paused.png'
+                                  : 'assets/icons/play.png'),
                         ),
                         SizedBox(width: 25),
                         PlayerButton(
@@ -181,7 +195,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                               controller.seekTo(Duration(seconds: to));
                             }
                           },
-                          asset: 'assets/icons/fast-forward.svg',
+                          asset: 'assets/icons/fast-forward.png',
                         )
                       ],
                     ),

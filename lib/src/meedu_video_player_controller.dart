@@ -19,9 +19,14 @@ enum MeeduPlayerStatus {
 }
 
 class MeeduPlayerController {
+  /// video conatiner backgroundColor
   final Color backgroundColor;
+
+  ///
   final List<DeviceOrientation> orientations;
   final List<SystemUiOverlay> overlays;
+
+  final bool fullScreenAsLandscape;
 
   VideoPlayerController _videoPlayerController;
   ValueNotifier<MeeduPlayerStatus> _status =
@@ -36,8 +41,14 @@ class MeeduPlayerController {
   ValueNotifier<Duration> _position = ValueNotifier(Duration.zero);
   ValueNotifier<List<DurationRange>> _buffered = ValueNotifier([]);
   double _aspectRatio;
+
+  /// mixin to listen video player events
   MeeduPlayerEventsMixin events;
+
+  /// video player status
   ValueNotifier<MeeduPlayerStatus> get status => _status;
+
+  /// aspect ratio for the video container
   double get aspectRatio => _aspectRatio;
   Widget get header => _header;
   Widget get bottomLeftContent => _bottomLeftContent;
@@ -45,7 +56,9 @@ class MeeduPlayerController {
   ValueNotifier<bool> get isFullScreen => _isFullScreen;
   bool get asFullScreen => _asFullScreen;
   ValueNotifier<bool> get closedCaptionEnabled => _closedCaptionEnabled;
+
   ValueNotifier<Duration> get position => _position;
+
   ValueNotifier<Duration> get duration => _duration;
   ValueNotifier<List<DurationRange>> get buffered => _buffered;
   VideoPlayerController get videoPlayerController => _videoPlayerController;
@@ -55,14 +68,15 @@ class MeeduPlayerController {
   /// [backgroundColor] backgroundColor of the player
   /// [orientations] device orientation after exit of the full screen
   /// [overlays] device SystemUiOverlays after exit of the full screen
+  /// [fullScreenAsLandscape] launch fullscreen as landscape or portrait
   MeeduPlayerController({
     this.backgroundColor = darkColor,
     this.orientations = DeviceOrientation.values,
     this.overlays = SystemUiOverlay.values,
+    this.fullScreenAsLandscape = true,
   });
 
-  // release the player
-
+  /// release the player
   void dispose() {
     _videoPlayerController?.removeListener(this._listener);
     _videoPlayerController?.dispose();
@@ -124,6 +138,7 @@ class MeeduPlayerController {
     return tmp;
   }
 
+  /// use this methos to enabled str subtittles
   isClosedCaptionEnabled(bool enabled) {
     this._closedCaptionEnabled.value = enabled;
   }
@@ -131,6 +146,15 @@ class MeeduPlayerController {
   /// exit of fullscreen
   fullScreenOff(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  void _checkFullScreenLandscape() {
+    if (this.fullScreenAsLandscape) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    }
   }
 
   /// go to fullscreen
@@ -144,7 +168,7 @@ class MeeduPlayerController {
       _isFullScreen.value = true;
       this.events?.onPlayerFullScreen(true);
     });
-
+    _checkFullScreenLandscape();
     await Navigator.of(context, rootNavigator: true).push(route);
     SystemChrome.setPreferredOrientations(orientations);
     SystemChrome.setEnabledSystemUIOverlays(overlays);
@@ -178,6 +202,7 @@ class MeeduPlayerController {
         return MeeduFullscreenPlayer(controller: this);
       },
     );
+    _checkFullScreenLandscape();
     Navigator.of(context, rootNavigator: true).push(route).then((value) {
       this.events?.onLauchAsFullScreenStopped();
       SystemChrome.setPreferredOrientations(orientations);

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../extras.dart';
 import '../meedu_video_player_controller.dart';
 import 'video_progress_bar.dart';
@@ -93,10 +92,10 @@ class _VideoBottomControlsState extends State<VideoBottomControls> {
                     CupertinoButton(
                       padding: EdgeInsets.symmetric(vertical: 7),
                       minSize: 25,
-                      child: SvgPicture.asset(
+                      child: Image.asset(
                         widget.controller.isFullScreen.value
-                            ? 'assets/icons/fullscreen-off.svg'
-                            : 'assets/icons/fullscreen-on.svg',
+                            ? 'assets/icons/fullscreen-off.png'
+                            : 'assets/icons/fullscreen-on.png',
                         package: 'meedu_player',
                         width: 20,
                         color: Colors.white,

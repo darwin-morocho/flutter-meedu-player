@@ -1,5 +1,7 @@
 import 'package:flutter/services.dart';
 
+///
+/// mixin to listen the video player events
 mixin MeeduPlayerEventsMixin {
   void onPlayerFinished();
   void onPlayerLoading();
