@@ -42,6 +42,7 @@ class _VideoBottomControlsState extends State<VideoBottomControls> {
           Row(
             children: <Widget>[
               VideoProgressBar(
+                sliderColor: widget.controller.sliderColor,
                 duration: widget.controller.duration.value,
                 onSeekTo: (position) {
                   widget.controller.seekTo(position);

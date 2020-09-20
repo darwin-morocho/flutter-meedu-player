@@ -20,8 +20,10 @@ class NetworkPageDemo extends StatefulWidget {
 
 class _NetworkPageDemoState extends State<NetworkPageDemo>
     with MeeduPlayerEventsMixin {
-  final MeeduPlayerController _controller =
-      MeeduPlayerController(backgroundColor: Colors.black);
+  final MeeduPlayerController _controller = MeeduPlayerController(
+    backgroundColor: Colors.black,
+    sliderColor: Colors.blue,
+  );
 
   @override
   void initState() {
@@ -42,7 +44,7 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
         dataSource: source,
         type: DataSourceType.network,
       ),
-      autoPlay: true,
+      autoPlay: false,
       aspectRatio: 16 / 9,
       header: Container(
         padding: EdgeInsets.all(10),
@@ -105,13 +107,12 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
   void onPlayerPaused(Duration position) {}
 
   @override
-  void onPlayerPlaying() {}
+  void onPlayerPlaying(Duration position) {
+    print("🥶 onPlayerPlaying");
+  }
 
   @override
   void onPlayerRepeat() {}
-
-  @override
-  void onPlayerResumed() {}
 
   @override
   void onPlayerSeekTo(Duration position) {}

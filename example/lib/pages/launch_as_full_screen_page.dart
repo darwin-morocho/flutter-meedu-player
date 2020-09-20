@@ -18,8 +18,10 @@ class LaunchAsFullScreenPage extends StatefulWidget {
 
 class _LaunchAsFullScreenPageState extends State<LaunchAsFullScreenPage>
     with MeeduPlayerEventsMixin {
-  final MeeduPlayerController _controller =
-      MeeduPlayerController(backgroundColor: Colors.black);
+  final MeeduPlayerController _controller = MeeduPlayerController(
+    backgroundColor: Colors.black,
+    sliderColor: Colors.green,
+  );
 
   ValueNotifier<int> currentIndex = ValueNotifier(0);
   bool init = true;
@@ -148,13 +150,12 @@ class _LaunchAsFullScreenPageState extends State<LaunchAsFullScreenPage>
   void onPlayerPaused(Duration position) {}
 
   @override
-  void onPlayerPlaying() {}
+  void onPlayerPlaying(Duration position) {
+    print("🥶 onPlayerPlaying");
+  }
 
   @override
   void onPlayerRepeat() {}
-
-  @override
-  void onPlayerResumed() {}
 
   @override
   void onPlayerSeekTo(Duration position) {}

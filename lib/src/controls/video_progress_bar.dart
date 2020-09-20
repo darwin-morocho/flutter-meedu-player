@@ -7,6 +7,7 @@ class VideoProgressBar extends StatefulWidget {
   final ValueNotifier<Duration> position;
   final ValueNotifier<List<DurationRange>> buffered;
   final void Function(Duration position) onSeekTo;
+  final Color sliderColor;
 
   VideoProgressBar({
     Key key,
@@ -14,6 +15,7 @@ class VideoProgressBar extends StatefulWidget {
     @required this.onSeekTo,
     @required this.position,
     @required this.buffered,
+    @required this.sliderColor,
   }) : super(key: key);
 
   @override
@@ -102,7 +104,7 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
                         Duration(seconds: _value.toInt()),
                       );
                     },
-                    activeColor: Colors.redAccent,
+                    activeColor: widget.sliderColor,
                     inactiveColor: Colors.transparent,
                   ),
                 ),

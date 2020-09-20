@@ -127,14 +127,19 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                         duration: Duration(milliseconds: 300),
                         child: ValueListenableBuilder(
                           valueListenable: controller.position,
-                          builder: (_, __, child) => ClosedCaption(
-                            text: controller
-                                .videoPlayerController.value.caption.text,
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: responsive.ip(2),
-                            ),
-                          ),
+                          builder: (_, __, child) {
+                            final videoController =
+                                controller.videoPlayerController;
+                            if (videoController == null) return Container();
+
+                            return ClosedCaption(
+                              text: videoController.value.caption.text,
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: responsive.ip(2),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
@@ -171,15 +176,7 @@ class _MeeduPlayerControlsState extends State<MeeduPlayerControls>
                         ),
                         SizedBox(width: 25),
                         PlayerButton(
-                          onPressed: () {
-                            if (controller.playing) {
-                              controller.pause();
-                            } else if (controller.paused) {
-                              controller.resume();
-                            } else {
-                              controller.repeat();
-                            }
-                          },
+                          onPressed: controller.onPlayButton,
                           asset: controller.finished
                               ? 'assets/icons/repeat.png'
                               : (controller.playing

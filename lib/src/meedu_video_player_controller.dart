@@ -20,7 +20,7 @@ enum MeeduPlayerStatus {
 
 class MeeduPlayerController {
   /// video conatiner backgroundColor
-  final Color backgroundColor;
+  final Color backgroundColor, sliderColor;
 
   ///
   final List<DeviceOrientation> orientations;
@@ -56,9 +56,7 @@ class MeeduPlayerController {
   ValueNotifier<bool> get isFullScreen => _isFullScreen;
   bool get asFullScreen => _asFullScreen;
   ValueNotifier<bool> get closedCaptionEnabled => _closedCaptionEnabled;
-
   ValueNotifier<Duration> get position => _position;
-
   ValueNotifier<Duration> get duration => _duration;
   ValueNotifier<List<DurationRange>> get buffered => _buffered;
   VideoPlayerController get videoPlayerController => _videoPlayerController;
@@ -74,12 +72,15 @@ class MeeduPlayerController {
     this.orientations = DeviceOrientation.values,
     this.overlays = SystemUiOverlay.values,
     this.fullScreenAsLandscape = true,
+    this.sliderColor = Colors.redAccent,
   });
 
   /// release the player
-  void dispose() {
-    _videoPlayerController?.removeListener(this._listener);
-    _videoPlayerController?.dispose();
+  Future<void> dispose() async {
+    if (_videoPlayerController == null) return;
+    _videoPlayerController.removeListener(this._listener);
+    await _videoPlayerController.dispose();
+    _videoPlayerController = null;
   }
 
   bool get loading {
@@ -212,6 +213,7 @@ class MeeduPlayerController {
         await _videoPlayerController?.pause();
         _videoPlayerController?.removeListener(this._listener);
         _videoPlayerController?.dispose();
+        _videoPlayerController = null;
         this.events?.onPlayerFullScreen(false);
       });
     });
@@ -264,7 +266,6 @@ class MeeduPlayerController {
       _status.value = MeeduPlayerStatus.updating; //
 
       // remove the previous listeners
-
       oldController?.removeListener(this._listener);
       _videoPlayerController = this._createVideoController(dataSource);
       _initialize(seekTo: seekTo ?? _position.value, autoPlay: wasPlaying);
@@ -299,8 +300,12 @@ class MeeduPlayerController {
         await _videoPlayerController.seekTo(seekTo);
       }
       if (autoPlay) {
+        // if the autoplay is enabled
         await _videoPlayerController.play();
-        this.events?.onPlayerPlaying();
+        _status.value = MeeduPlayerStatus.playing;
+        this.events?.onPlayerPlaying(Duration.zero);
+      } else {
+        _status.value = MeeduPlayerStatus.paused;
       }
     } on PlatformException catch (e) {
       this._status.value = MeeduPlayerStatus.error;
@@ -329,6 +334,7 @@ class MeeduPlayerController {
     _buffered.value = _videoPlayerController.value.buffered;
   }
 
+  /// pause the video
   Future<void> pause() async {
     if (_status.value != MeeduPlayerStatus.playing) return;
     if (_videoPlayerController != null) {
@@ -338,16 +344,18 @@ class MeeduPlayerController {
     }
   }
 
+  /// resume the video
   Future<void> resume() async {
-    if (_status.value != MeeduPlayerStatus.paused) return;
+    if (!paused) return;
     if (_videoPlayerController != null) {
       _finished = false;
       await _videoPlayerController.play();
       _status.value = MeeduPlayerStatus.playing;
-      this.events?.onPlayerResumed();
+      this.events?.onPlayerPlaying(this.position.value);
     }
   }
 
+  /// if the video is finished play again
   Future<void> repeat() async {
     if (_videoPlayerController != null) {
       _finished = false;
@@ -358,6 +366,7 @@ class MeeduPlayerController {
     }
   }
 
+  /// changes the current position of the video
   Future<void> seekTo(Duration position) async {
     if (_status.value == MeeduPlayerStatus.loading) return;
     if (_videoPlayerController != null) {
@@ -366,6 +375,20 @@ class MeeduPlayerController {
       if (_finished) {
         _finished = false;
         _status.value = MeeduPlayerStatus.playing;
+      }
+    }
+  }
+
+  void onPlayButton() {
+    if (playing) {
+      pause();
+    } else if (paused) {
+      resume();
+    } else {
+      if (finished) {
+        repeat();
+      } else {
+        resume();
       }
     }
   }

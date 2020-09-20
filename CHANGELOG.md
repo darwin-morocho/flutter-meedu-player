@@ -1,3 +1,6 @@
+## [0.2.1]
+* updated doc
+
 ## [0.2.0]
 * added auto dismiss controls, launch fullscreen as landscape mode
 
