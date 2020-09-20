@@ -1,32 +1,47 @@
+## [0.2.2]
+- Added onPlayerPlaying event
+- Updated example
+
 ## [0.2.1]
-* updated doc
+
+- updated doc
 
 ## [0.2.0]
-* added auto dismiss controls, launch fullscreen as landscape mode
+
+- added auto dismiss controls, launch fullscreen as landscape mode
 
 ## [0.1.2]
-* updated examples
+
+- updated examples
 
 ## [0.1.1]
-* added fullscreen events listener
+
+- added fullscreen events listener
 
 ## [0.1.0+1]
-* added license
+
+- added license
 
 ## [0.1.0]
-* added launch as fullscreen
+
+- added launch as fullscreen
 
 ## [0.0.4]
-* removed unnecesary imports
+
+- removed unnecesary imports
 
 ## [0.0.3+1]
-* added exmaples
+
+- added exmaples
 
 ## [0.0.3]
-* added suport to subtitles (STR) and switch video resolution
+
+- added suport to subtitles (STR) and switch video resolution
 
 ## [0.0.2]
-* added Fullscreen support
+
+- added Fullscreen support
 
 ## [0.0.1] - initial version
-* minimal version
+
+- minimal version
