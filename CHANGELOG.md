@@ -1,3 +1,7 @@
+## [0.2.3]
+- Fixed rotation after close fullscreen mode
+
+
 ## [0.2.2]
 - Added onPlayerPlaying event
 - Updated example

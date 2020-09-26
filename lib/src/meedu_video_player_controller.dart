@@ -171,8 +171,8 @@ class MeeduPlayerController {
     });
     _checkFullScreenLandscape();
     await Navigator.of(context, rootNavigator: true).push(route);
-    SystemChrome.setPreferredOrientations(orientations);
-    SystemChrome.setEnabledSystemUIOverlays(overlays);
+    await SystemChrome.setPreferredOrientations(orientations);
+    await SystemChrome.setEnabledSystemUIOverlays(overlays);
     _isFullScreen.value = false;
     this.events?.onPlayerFullScreen(false);
   }

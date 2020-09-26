@@ -20,10 +20,16 @@ class NetworkPageDemo extends StatefulWidget {
 
 class _NetworkPageDemoState extends State<NetworkPageDemo>
     with MeeduPlayerEventsMixin {
+  final GlobalKey key = GlobalKey();
   final MeeduPlayerController _controller = MeeduPlayerController(
-    backgroundColor: Colors.black,
-    sliderColor: Colors.blue,
-  );
+      backgroundColor: Colors.black,
+      sliderColor: Colors.blue,
+      orientations: [
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.portraitUp,
+      ]);
 
   @override
   void initState() {
@@ -67,6 +73,7 @@ class _NetworkPageDemoState extends State<NetworkPageDemo>
         child: Column(
           children: <Widget>[
             MeeduPlayer(
+              key: key,
               controller: _controller,
             ),
             Expanded(
