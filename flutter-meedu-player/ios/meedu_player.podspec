@@ -5,9 +5,9 @@
 Pod::Spec.new do |s|
   s.name             = 'meedu_player'
   s.version          = '0.3.0'
-  s.summary          = 'A new flutter plugin project.'
+  s.summary          = 'A new Flutter UI video controls for the flutter video_player plugin.'
   s.description      = <<-DESC
-A new flutter plugin project.
+  A new Flutter UI video controls for the flutter video_player plugin..
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
