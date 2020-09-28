@@ -8,8 +8,8 @@
 #import "meedu_player-Swift.h"
 #endif
 
-@implementation PlayerPlugin
+@implementation MeeduPlayerPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  [SwiftPlayerPlugin registerWithRegistrar:registrar];
+  [SwiftMeeduPlayerPlugin registerWithRegistrar:registrar];
 }
 @end

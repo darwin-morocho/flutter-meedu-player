@@ -10,7 +10,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** PlayerPlugin */
-public class PlayerPlugin implements FlutterPlugin, MethodCallHandler {
+public class MeeduPlayerPlugin implements FlutterPlugin, MethodCallHandler {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -19,7 +19,7 @@ public class PlayerPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "player");
+    channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "meedu_player");
     channel.setMethodCallHandler(this);
   }
 
@@ -34,7 +34,7 @@ public class PlayerPlugin implements FlutterPlugin, MethodCallHandler {
   // in the same class.
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "player");
-    channel.setMethodCallHandler(new PlayerPlugin());
+    channel.setMethodCallHandler(new MeeduPlayerPlugin());
   }
 
   @Override

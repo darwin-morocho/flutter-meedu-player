@@ -1,4 +1,4 @@
 #import <Flutter/Flutter.h>
 
-@interface PlayerPlugin : NSObject<FlutterPlugin>
+@interface MeeduPlayerPlugin : NSObject<FlutterPlugin>
 @end
