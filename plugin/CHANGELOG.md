@@ -1,3 +1,7 @@
+## [0.3.1]
+- Updated documentation
+- Added picture in picture support for Android
+
 ## [0.3.0]
 * Breaking changes
     - Use GetX to manage the video player state

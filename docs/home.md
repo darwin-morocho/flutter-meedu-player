@@ -2,7 +2,7 @@
 
 <a target="blank" href="https://pub.dev/packages/meedu_player"><img src="https://img.shields.io/pub/v/meedu_player?include_prereleases&style=flat-square"/></a>
 <img src="https://img.shields.io/github/last-commit/the-meedu-app/flutter-meedu-player/master?style=flat-square"/>
-<img src="https://img.shields.io/github/last-commit/the-meedu-app/flutter-meedu-player/master?style=flat-square"/>
+<img src="https://img.shields.io/github/license/the-meedu-app/flutter-meedu-player?style=flat-square"/>
 
 > Modern video player UI for [video_player](https://pub.dev/packages/video_player)
 
