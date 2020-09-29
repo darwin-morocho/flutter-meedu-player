@@ -451,6 +451,7 @@ class MeeduPlayerController extends GetxController {
 
   /// dispose de video_player controller
   Future<void> dispose() async {
+    _videoPlayerController?.removeListener(this._listener);
     _timer?.cancel();
     await _videoPlayerController?.dispose();
     _videoPlayerController = null;
