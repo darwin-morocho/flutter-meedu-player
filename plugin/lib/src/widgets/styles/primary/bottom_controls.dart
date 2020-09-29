@@ -4,6 +4,8 @@ import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/helpers/responsive.dart';
 import 'package:meedu_player/src/helpers/utils.dart';
 import 'package:meedu_player/src/widgets/fullscreen_button.dart';
+import 'package:meedu_player/src/widgets/mute_sound_button.dart';
+import 'package:meedu_player/src/widgets/pip_button.dart';
 import 'package:meedu_player/src/widgets/player_button.dart';
 import 'package:meedu_player/src/widgets/player_slider.dart';
 
@@ -55,31 +57,9 @@ class PrimaryBottomControls extends StatelessWidget {
             SizedBox(width: 15),
             if (_.bottomRight != null) ...[_.bottomRight, SizedBox(width: 5)],
 
-            Obx(() {
-              if (!_.pipAvailable) return Container();
-              return PlayerButton(
-                size: responsive.ip(_.fullscreen ? 5 : 7),
-                circle: false,
-                backgrounColor: Colors.transparent,
-                iconColor: Colors.white,
-                iconPath: 'assets/icons/picture-in-picture.png',
-                onPressed: () => _.enterPip(context),
-              );
-            }),
+            PipButton(responsive: responsive),
 
-            Obx(() {
-              return PlayerButton(
-                size: responsive.ip(_.fullscreen ? 5 : 7),
-                circle: false,
-                backgrounColor: Colors.transparent,
-                iconColor: Colors.white,
-                iconPath:
-                    _.mute ? 'assets/icons/mute.png' : 'assets/icons/sound.png',
-                onPressed: () {
-                  _.setMute(!_.mute);
-                },
-              );
-            }),
+            MuteSoundButton(responsive: responsive),
 
             FullscreenButton(
               size: responsive.ip(_.fullscreen ? 5 : 7),

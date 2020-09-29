@@ -4,8 +4,9 @@ import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/helpers/responsive.dart';
 import 'package:meedu_player/src/helpers/utils.dart';
 import 'package:meedu_player/src/widgets/fullscreen_button.dart';
+import 'package:meedu_player/src/widgets/mute_sound_button.dart';
+import 'package:meedu_player/src/widgets/pip_button.dart';
 import 'package:meedu_player/src/widgets/play_pause_button.dart';
-import 'package:meedu_player/src/widgets/player_button.dart';
 import 'package:meedu_player/src/widgets/player_slider.dart';
 
 class SecondaryBottomControls extends StatelessWidget {
@@ -90,20 +91,8 @@ class SecondaryBottomControls extends StatelessWidget {
                       _.bottomRight,
                       SizedBox(width: 10)
                     ],
-                    Obx(() {
-                      return PlayerButton(
-                        size: buttonsSize,
-                        circle: false,
-                        backgrounColor: Colors.transparent,
-                        iconColor: Colors.white,
-                        iconPath: _.mute
-                            ? 'assets/icons/mute.png'
-                            : 'assets/icons/sound.png',
-                        onPressed: () {
-                          _.setMute(!_.mute);
-                        },
-                      );
-                    }),
+                    PipButton(responsive: responsive),
+                    MuteSoundButton(responsive: responsive),
                     FullscreenButton(
                       size: buttonsSize,
                     ),

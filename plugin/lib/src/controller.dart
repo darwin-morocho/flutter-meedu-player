@@ -34,6 +34,7 @@ class MeeduPlayerController extends GetxController {
   final String errorText;
   Widget placeholder, header, bottomRight;
   final ControlsStyle controlsStyle;
+  final bool pipEnabled;
 
   // OBSERVABLES
   Rx<Duration> _position = Duration.zero.obs;
@@ -127,6 +128,7 @@ class MeeduPlayerController extends GetxController {
     this.controlsStyle = ControlsStyle.primary,
     this.header,
     this.bottomRight,
+    this.pipEnabled = false,
   }) {
     this.placeholder = placeholder ??
         SpinKitWave(
@@ -451,7 +453,7 @@ class MeeduPlayerController extends GetxController {
   ///
   /// only available since Android 7
   Future<void> enterPip(BuildContext context) async {
-    if (this.pipAvailable) {
+    if (this.pipAvailable && this.pipEnabled) {
       if (!fullscreen) {
         // if the player is not in the fullscreen mode
         controls = false;

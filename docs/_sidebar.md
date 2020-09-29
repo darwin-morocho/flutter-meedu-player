@@ -1,2 +1,3 @@
 - [Quick Start](/)
 - [Picture In Picture](picture-in-picture.md)
+- [Listening the player events](listening-player-events.md)
