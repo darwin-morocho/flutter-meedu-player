@@ -34,7 +34,8 @@ class MeeduPlayerController extends GetxController {
   final String errorText;
   Widget placeholder, header, bottomRight;
   final ControlsStyle controlsStyle;
-  final bool pipEnabled;
+  final bool pipEnabled, showPipButton;
+  BuildContext _pipContextToFullscreen;
 
   // OBSERVABLES
   Rx<Duration> _position = Duration.zero.obs;
@@ -98,12 +99,16 @@ class MeeduPlayerController extends GetxController {
   /// [looping] is true if the player is looping
   bool get looping => _looping;
 
-  /// [autoPlay]is true if the player has enabled the autoplay
+  /// [autoPlay] is true if the player has enabled the autoplay
   bool get autoplay => _autoplay;
 
   bool get closedCaptionEnabled => _closedCaptionEnabled.value;
   Stream<bool> get onClosedCaptionEnabledChanged =>
       _closedCaptionEnabled.stream;
+
+  /// [isInPipMode] is true if pip mode is enabled
+  bool get isInPipMode => _pipManager.isInPipMode.value;
+  Stream<bool> get onPipModeChanged => _pipManager.isInPipMode.stream;
 
   /// returns the os version
   Future<double> get osVersion async {
@@ -129,6 +134,7 @@ class MeeduPlayerController extends GetxController {
     this.header,
     this.bottomRight,
     this.pipEnabled = false,
+    this.showPipButton = false,
   }) {
     this.placeholder = placeholder ??
         SpinKitWave(
@@ -136,10 +142,16 @@ class MeeduPlayerController extends GetxController {
           color: this.colorTheme,
         );
 
-    // get the OS version and check if pip is available
-    this._pipManager.checkPipAvailable().then(
-          (value) => _pipAvailable.value = value,
-        );
+    if (pipEnabled) {
+      // get the OS version and check if pip is available
+      this._pipManager.checkPipAvailable().then(
+            (value) => _pipAvailable.value = value,
+          );
+      // listen the pip mode changes
+      ever<bool>(_pipManager.isInPipMode, this._onPipModeChanged);
+    } else {
+      _pipAvailable.value = false;
+    }
   }
 
   /// create a new video_player controller
@@ -454,13 +466,22 @@ class MeeduPlayerController extends GetxController {
   /// only available since Android 7
   Future<void> enterPip(BuildContext context) async {
     if (this.pipAvailable && this.pipEnabled) {
+      controls = false; // hide the controls
       if (!fullscreen) {
         // if the player is not in the fullscreen mode
-        controls = false;
+        _pipContextToFullscreen = context;
         goToFullscreen(context, appliyOverlaysAndOrientations: false);
       }
-
       await _pipManager.enterPip();
+    }
+  }
+
+  /// listener for pip changes
+  void _onPipModeChanged(bool isInPipMode) {
+    // if the pip mode was closed and before enter to pip mode the player was not in fullscreen
+    if (!isInPipMode && _pipContextToFullscreen != null) {
+      Navigator.pop(_pipContextToFullscreen); // close the fullscreen
+      _pipContextToFullscreen = null;
     }
   }
 }

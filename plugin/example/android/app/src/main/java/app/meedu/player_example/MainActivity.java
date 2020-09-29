@@ -1,6 +1,7 @@
 package app.meedu.player_example;
 
-import io.flutter.embedding.android.FlutterActivity;
+import app.meedu.player.MeeduPlayerFlutterActivity;
 
-public class MainActivity extends FlutterActivity {
+public class MainActivity extends MeeduPlayerFlutterActivity {
+
 }

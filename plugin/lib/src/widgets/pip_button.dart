@@ -13,7 +13,7 @@ class PipButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<MeeduPlayerController>(
       builder: (_) => Obx(() {
-        if (!_.pipAvailable || !_.pipEnabled) return Container();
+        if (!_.pipAvailable || !_.showPipButton) return Container();
         return PlayerButton(
           size: responsive.ip(_.fullscreen ? 5 : 7),
           circle: false,

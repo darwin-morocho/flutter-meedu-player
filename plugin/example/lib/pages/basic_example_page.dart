@@ -16,7 +16,8 @@ class _BasicExamplePageState extends State<BasicExamplePage> {
   // to enable the pip (picture in picture) support on Android
   final _meeduPlayerController = MeeduPlayerController(
     controlsStyle: ControlsStyle.primary,
-    pipEnabled: true, // use false to hide pip button in the player
+    pipEnabled: true, // enable  pip on android
+    showPipButton: true, // use false to hide pip button in the player
   );
 
   StreamSubscription _playerEventSubs;

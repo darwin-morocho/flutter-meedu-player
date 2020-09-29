@@ -1,9 +1,11 @@
 package app.meedu.player;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -17,7 +19,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * PlayerPlugin
  */
-public class MeeduPlayerPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+public class MeeduPlayerPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, OnPictureInPictureListener {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -27,7 +29,6 @@ public class MeeduPlayerPlugin implements FlutterPlugin, MethodCallHandler, Acti
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "app.meedu.player");
         channel.setMethodCallHandler(this);
     }
@@ -50,6 +51,10 @@ public class MeeduPlayerPlugin implements FlutterPlugin, MethodCallHandler, Acti
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
 
         switch (call.method) {
+            case "initPipConfiguration":
+                this.initPipConfiguration();
+                result.success(null);
+                break;
             case "osVersion":
                 result.success(Build.VERSION.RELEASE);
                 break;
@@ -68,6 +73,10 @@ public class MeeduPlayerPlugin implements FlutterPlugin, MethodCallHandler, Acti
         channel.setMethodCallHandler(null);
     }
 
+
+    private void initPipConfiguration() {
+        ((MeeduPlayerFlutterActivity) this.activity).onPictureInPictureListener = this;
+    }
 
     /**
      * Start the picture in picture mode
@@ -98,5 +107,11 @@ public class MeeduPlayerPlugin implements FlutterPlugin, MethodCallHandler, Acti
     @Override
     public void onDetachedFromActivity() {
 
+    }
+
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+        channel.invokeMethod("onPictureInPictureModeChanged", isInPictureInPictureMode);
     }
 }

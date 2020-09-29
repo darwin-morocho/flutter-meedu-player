@@ -2,11 +2,23 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
+import 'package:get/state_manager.dart';
 
 class PipManager {
   final _channel = MethodChannel("app.meedu.player");
+
   Completer<double> _osVersion = Completer();
   Completer<bool> _pipAvailable = Completer();
+
+  RxBool isInPipMode = false.obs;
+
+  PipManager() {
+    _channel.setMethodCallHandler((call) async {
+      if (call.method == 'onPictureInPictureModeChanged') {
+        isInPipMode.value = call.arguments;
+      }
+    });
+  }
 
   Future<double> get osVersion async {
     return _osVersion.future;
@@ -28,6 +40,7 @@ class PipManager {
   Future<bool> checkPipAvailable() async {
     bool available = false;
     if (Platform.isAndroid) {
+      await this._channel.invokeMethod('initPipConfiguration');
       await _getOSVersion();
       final osVersion = await _osVersion.future;
       // check the OS version
