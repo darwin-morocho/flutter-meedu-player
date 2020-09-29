@@ -30,6 +30,6 @@ Modern video player UI for  [video_player](https://pub.dev/packages/video_player
 | Customize  | partially  | partially |
 | Picture in Picture  | ❌  | ✅ |
 
-<br/>
+---
 
 👋 👉 <b>[Complete documentation Here](https://the-meedu-app.github.io/flutter-meedu-player)</b>

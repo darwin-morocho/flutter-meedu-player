@@ -1,5 +1,2 @@
-
-
-
-
 - [Quick Start](/)
+- [Picture In Picture](picture-in-picture.md)

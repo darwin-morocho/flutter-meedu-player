@@ -23,13 +23,18 @@ class ScreenManager {
   }
 
   /// hide the statusBar and the navigation bar, set only landscape mode only if forceLandScapeInFullscreen is true
-  Future<void> setFullScreenOverlaysAndOrientations() async {
+  Future<void> setFullScreenOverlaysAndOrientations({
+    hideOverLays = true,
+  }) async {
     await SystemChrome.setPreferredOrientations(this.forceLandScapeInFullscreen
         ? [
             DeviceOrientation.landscapeLeft,
             DeviceOrientation.landscapeRight,
           ]
         : this.orientations);
-    await SystemChrome.setEnabledSystemUIOverlays([]);
+
+    if (hideOverLays) {
+      await SystemChrome.setEnabledSystemUIOverlays([]);
+    }
   }
 }

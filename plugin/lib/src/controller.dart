@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -9,6 +8,7 @@ import 'package:meedu_player/src/helpers/data_source.dart';
 import 'package:meedu_player/src/helpers/meedu_player_status.dart';
 import 'package:meedu_player/src/helpers/player_data_status.dart';
 import 'package:meedu_player/src/helpers/screen_manager.dart';
+import 'package:meedu_player/src/native/pip_manager.dart';
 import 'package:meedu_player/src/widgets/fullscreen_page.dart';
 import 'package:video_player/video_player.dart';
 
@@ -17,6 +17,7 @@ enum ControlsStyle { primary, secondary }
 class MeeduPlayerController extends GetxController {
   /// the video_player controller
   VideoPlayerController _videoPlayerController;
+  final _pipManager = PipManager();
 
   /// Screen Manager to define the overlays and device orientation when the player enters in fullscreen mode
   final ScreenManager screenManager;
@@ -44,6 +45,7 @@ class MeeduPlayerController extends GetxController {
   RxBool _mute = false.obs;
   RxBool _fullscreen = false.obs;
   RxBool _showControls = true.obs;
+  RxBool _pipAvailable = false.obs;
 
   // NO OBSERVABLES
   bool _isSliderMoving = false;
@@ -102,6 +104,14 @@ class MeeduPlayerController extends GetxController {
   Stream<bool> get onClosedCaptionEnabledChanged =>
       _closedCaptionEnabled.stream;
 
+  /// returns the os version
+  Future<double> get osVersion async {
+    return _pipManager.osVersion;
+  }
+
+  /// returns true if the pip mode can used on the current device, the initial value will be false after check if pip is available
+  bool get pipAvailable => _pipAvailable.value;
+
   /// creates an instance of [MeeduPlayerControlle]
   ///
   /// [screenManager] the device orientations and overlays
@@ -122,6 +132,11 @@ class MeeduPlayerController extends GetxController {
         SpinKitWave(
           size: 30,
           color: this.colorTheme,
+        );
+
+    // get the OS version and check if pip is available
+    this._pipManager.checkPipAvailable().then(
+          (value) => _pipAvailable.value = value,
         );
   }
 
@@ -216,7 +231,12 @@ class MeeduPlayerController extends GetxController {
       _looping = looping ?? this._looping;
       dataStatus.status.value = DataStatus.loading;
 
-      await this.pause(notify: false); // if we are playing a video
+      // if we are playing a video
+      if (_videoPlayerController != null &&
+          _videoPlayerController.value.isPlaying) {
+        await this.pause(notify: false);
+      }
+
       // save the current video controller to be disposed in the next frame
       VideoPlayerController oldController = _videoPlayerController;
 
@@ -370,8 +390,13 @@ class MeeduPlayerController extends GetxController {
   }
 
   /// show the player in fullscreen mode
-  Future<void> goToFullscreen(BuildContext context) async {
-    await screenManager.setFullScreenOverlaysAndOrientations();
+  Future<void> goToFullscreen(
+    BuildContext context, {
+    bool appliyOverlaysAndOrientations = true,
+  }) async {
+    if (appliyOverlaysAndOrientations) {
+      await screenManager.setFullScreenOverlaysAndOrientations();
+    }
     _fullscreen.value = true;
     final route = MaterialPageRoute(
       builder: (_) => MeeduPlayerFullscreenPage(controller: this),
@@ -406,7 +431,7 @@ class MeeduPlayerController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _timer?.cancel();
       await pause();
-      _videoPlayerController.removeListener(this._listener);
+      _videoPlayerController?.removeListener(this._listener);
     });
   }
 
@@ -417,7 +442,23 @@ class MeeduPlayerController extends GetxController {
     _videoPlayerController = null;
   }
 
-  set closedCaptionEnabled(bool value) {
-    _closedCaptionEnabled.value = value;
+  /// enable or diable the visibility of ClosedCaptionFile
+  set closedCaptionEnabled(bool enabled) {
+    _closedCaptionEnabled.value = enabled;
+  }
+
+  /// enter to picture in picture mode only Android
+  ///
+  /// only available since Android 7
+  Future<void> enterPip(BuildContext context) async {
+    if (this.pipAvailable) {
+      if (!fullscreen) {
+        // if the player is not in the fullscreen mode
+        controls = false;
+        goToFullscreen(context, appliyOverlaysAndOrientations: false);
+      }
+
+      await _pipManager.enterPip();
+    }
   }
 }

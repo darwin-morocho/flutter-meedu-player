@@ -54,6 +54,19 @@ class PrimaryBottomControls extends StatelessWidget {
             // END VIDEO DURATION
             SizedBox(width: 15),
             if (_.bottomRight != null) ...[_.bottomRight, SizedBox(width: 5)],
+
+            Obx(() {
+              if (!_.pipAvailable) return Container();
+              return PlayerButton(
+                size: responsive.ip(_.fullscreen ? 5 : 7),
+                circle: false,
+                backgrounColor: Colors.transparent,
+                iconColor: Colors.white,
+                iconPath: 'assets/icons/picture-in-picture.png',
+                onPressed: () => _.enterPip(context),
+              );
+            }),
+
             Obx(() {
               return PlayerButton(
                 size: responsive.ip(_.fullscreen ? 5 : 7),
