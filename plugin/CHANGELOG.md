@@ -1,24 +1,29 @@
+## [0.3.2]
+- Remove listeners before dispose
+
 ## [0.3.1]
+
 - Updated documentation
 - Added picture in picture support for Android
 
 ## [0.3.0]
-* Breaking changes
-    - Use GetX to manage the video player state
-    - Added Playback Speed
-    - Added setLooping
-    - `MeeduPlayer` has been changed for `MeeduVideoPlayer`
-    - Removed `MeeduPlayerEventsMixin` now to listen the players events you can use the streams
-    - Added mutiples controls styles
-    - Updated the examples
-    - Added Official documentation
 
+- Breaking changes
+  - Use GetX to manage the video player state
+  - Added Playback Speed
+  - Added setLooping
+  - `MeeduPlayer` has been changed for `MeeduVideoPlayer`
+  - Removed `MeeduPlayerEventsMixin` now to listen the players events you can use the streams
+  - Added mutiples controls styles
+  - Updated the examples
+  - Added Official documentation
 
 ## [0.2.3]
+
 - Fixed rotation after close fullscreen mode
 
-
 ## [0.2.2]
+
 - Added onPlayerPlaying event
 - Updated example
 
