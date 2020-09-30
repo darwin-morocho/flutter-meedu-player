@@ -7,9 +7,9 @@
 > Modern video player UI for [video_player](https://pub.dev/packages/video_player)
 
 <img src="assets/pip.gif" alt="meedu_player pip" width="160" />
-<img src="https://user-images.githubusercontent.com/15864336/94494350-988c3a80-01b4-11eb-93ac-8af2f05281e9.png" alt="meedu_player" width="160" />
+<img src="assets/q2.gif" alt="meedu_player" width="160" />
 <br/>
-<img src="https://user-images.githubusercontent.com/15864336/94494353-99bd6780-01b4-11eb-875e-95f9181968cf.png" alt="meedu_player" width="300" />
+<img src="assets/full.gif" alt="meedu_player" width="300" />
 <img src="https://user-images.githubusercontent.com/15864336/94494352-9924d100-01b4-11eb-9c0f-54c88868331b.png" alt="meedu_player" width="300" />
 
 
