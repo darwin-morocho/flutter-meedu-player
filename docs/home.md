@@ -27,7 +27,6 @@
 | Fullscreen  | ✅  | ✅ |
 | Launch Player as Fullscreen  | ✅  | ✅ |
 | Playback Speed  | ✅  | ✅ |
-| Playback Speed  | ✅  | ✅ |
 | fastForward / Rewind  | ✅  | ✅ |
 | srt subtitles  | ✅  | ✅ |
 | Customize  | partially  | partially |
@@ -77,6 +76,12 @@ Add the following entry to your Info.plist file, located in `<project root>/ios/
   <key>NSAllowsArbitraryLoads</key>
   <true/>
 </dict>
+```
+
+In your `Podfile` you need set a minimum target version like 9.0 or higher
+
+```
+platform :ios, '9.0'
 ```
 
 ---

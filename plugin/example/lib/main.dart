@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:player_example/pages/basic_example_page.dart';
 import 'package:player_example/pages/fullscreen_example_page.dart';
 import 'package:player_example/pages/network_with_subtitle_page.dart';
+import 'package:player_example/pages/playback_speed_example_page.dart';
 import 'package:player_example/pages/player_with_header_page.dart';
 
 void main() {
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         "fullscreen": (_) => FullscreenExamplePage(),
         "with-header": (_) => PlayerWithHeaderPage(),
         "subtitles": (_) => NetworkWithSubtitlesPage(),
+        "playback-speed": (_) => PlayBackSpeedExamplePage(),
       },
     );
   }
@@ -54,6 +56,12 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, 'subtitles');
             },
             child: Text("With subtitles example"),
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.pushNamed(context, 'playback-speed');
+            },
+            child: Text("Playback speed example"),
           )
         ],
       ),

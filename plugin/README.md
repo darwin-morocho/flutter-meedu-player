@@ -23,7 +23,6 @@
 | Fullscreen  | ✅  | ✅ |
 | Launch Player as Fullscreen  | ✅  | ✅ |
 | Playback Speed  | ✅  | ✅ |
-| Playback Speed  | ✅  | ✅ |
 | fastForward / Rewind  | ✅  | ✅ |
 | srt subtitles  | ✅  | ✅ |
 | Customize  | partially  | partially |
