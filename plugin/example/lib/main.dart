@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:player_example/pages/basic_example_page.dart';
+import 'package:player_example/pages/change_quality_example_page.dart';
 import 'package:player_example/pages/fullscreen_example_page.dart';
 import 'package:player_example/pages/network_with_subtitle_page.dart';
 import 'package:player_example/pages/playback_speed_example_page.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         "with-header": (_) => PlayerWithHeaderPage(),
         "subtitles": (_) => NetworkWithSubtitlesPage(),
         "playback-speed": (_) => PlayBackSpeedExamplePage(),
+        "quality-change": (_) => ChangeQualityExamplePage(),
       },
     );
   }
@@ -62,6 +64,12 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, 'playback-speed');
             },
             child: Text("Playback speed example"),
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.pushNamed(context, 'quality-change');
+            },
+            child: Text("Quality Change example"),
           )
         ],
       ),
