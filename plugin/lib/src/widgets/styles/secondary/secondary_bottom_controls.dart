@@ -16,6 +16,7 @@ class SecondaryBottomControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _ = MeeduPlayerController.of(context);
     final fontSize = responsive.ip(2);
     final textStyle = TextStyle(
       color: Colors.white,
@@ -25,84 +26,82 @@ class SecondaryBottomControls extends StatelessWidget {
     final tmp = responsive.ip(8);
     final buttonsSize = tmp < 45.0 ? tmp : 45.0;
 
-    return GetBuilder<MeeduPlayerController>(
-      builder: (_) => Positioned(
-        left: 0,
-        right: 0,
-        bottom: 0,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Transform.translate(
-              offset: Offset(0, 4),
-              child: PlayerSlider(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    SizedBox(width: 5),
-                    PlayPauseButton(
-                      size: buttonsSize,
-                    ),
-                    SizedBox(width: 5),
-                    Obx(
-                      () {
-                        String text = "";
-                        if (_.duration.inMinutes >= 60) {
-                          // if the duration is >= 1 hour
-                          text =
-                              "${printDurationWithHours(_.position)} / ${printDurationWithHours(_.duration)}";
-                        } else {
-                          text =
-                              "${printDuration(_.position)} / ${printDuration(_.duration)}";
-                        }
-                        return Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: Text(
-                            text,
-                            style: textStyle,
-                          ),
-                        );
-                      },
-                    ),
-                    // PlayerButton(
-                    //   onPressed: _.rewind,
-                    //   size: buttonsSize,
-                    //   iconColor: Colors.white,
-                    //   backgrounColor: Colors.transparent,
-                    //   iconPath: 'assets/icons/rewind.png',
-                    // ),
-                    // PlayerButton(
-                    //   onPressed: _.fastForward,
-                    //   iconColor: Colors.white,
-                    //   backgrounColor: Colors.transparent,
-                    //   size: buttonsSize,
-                    //   iconPath: 'assets/icons/fast-forward.png',
-                    // ),
-                    SizedBox(width: 5),
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Transform.translate(
+            offset: Offset(0, 4),
+            child: PlayerSlider(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: 5),
+                  PlayPauseButton(
+                    size: buttonsSize,
+                  ),
+                  SizedBox(width: 5),
+                  Obx(
+                    () {
+                      String text = "";
+                      if (_.duration.inMinutes >= 60) {
+                        // if the duration is >= 1 hour
+                        text =
+                            "${printDurationWithHours(_.position)} / ${printDurationWithHours(_.duration)}";
+                      } else {
+                        text =
+                            "${printDuration(_.position)} / ${printDuration(_.duration)}";
+                      }
+                      return Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Text(
+                          text,
+                          style: textStyle,
+                        ),
+                      );
+                    },
+                  ),
+                  // PlayerButton(
+                  //   onPressed: _.rewind,
+                  //   size: buttonsSize,
+                  //   iconColor: Colors.white,
+                  //   backgrounColor: Colors.transparent,
+                  //   iconPath: 'assets/icons/rewind.png',
+                  // ),
+                  // PlayerButton(
+                  //   onPressed: _.fastForward,
+                  //   iconColor: Colors.white,
+                  //   backgrounColor: Colors.transparent,
+                  //   size: buttonsSize,
+                  //   iconPath: 'assets/icons/fast-forward.png',
+                  // ),
+                  SizedBox(width: 5),
+                ],
+              ),
+              Row(
+                children: [
+                  if (_.bottomRight != null) ...[
+                    _.bottomRight,
+                    SizedBox(width: 10)
                   ],
-                ),
-                Row(
-                  children: [
-                    if (_.bottomRight != null) ...[
-                      _.bottomRight,
-                      SizedBox(width: 10)
-                    ],
-                    PipButton(responsive: responsive),
-                    MuteSoundButton(responsive: responsive),
-                    FullscreenButton(
-                      size: buttonsSize,
-                    ),
-                    SizedBox(width: 5),
-                  ],
-                )
-              ],
-            ),
-          ],
-        ),
+                  PipButton(responsive: responsive),
+                  MuteSoundButton(responsive: responsive),
+                  FullscreenButton(
+                    size: buttonsSize,
+                  ),
+                  SizedBox(width: 5),
+                ],
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

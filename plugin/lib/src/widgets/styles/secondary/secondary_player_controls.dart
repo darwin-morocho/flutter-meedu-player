@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
 import 'package:meedu_player/src/controller.dart';
 import 'package:meedu_player/src/helpers/responsive.dart';
 
@@ -13,23 +12,22 @@ class SecondaryVideoPlayerControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MeeduPlayerController>(
-      builder: (_) => ControlsContainer(
-        child: Stack(
-          children: [
-            // RENDER A CUSTOM HEADER
-            if (_.header != null)
-              Positioned(
-                child: _.header,
-                left: 0,
-                right: 0,
-                top: 0,
-              ),
-            SecondaryBottomControls(
-              responsive: responsive,
+    final _ = MeeduPlayerController.of(context);
+    return ControlsContainer(
+      child: Stack(
+        children: [
+          // RENDER A CUSTOM HEADER
+          if (_.header != null)
+            Positioned(
+              child: _.header,
+              left: 0,
+              right: 0,
+              top: 0,
             ),
-          ],
-        ),
+          SecondaryBottomControls(
+            responsive: responsive,
+          ),
+        ],
       ),
     );
   }

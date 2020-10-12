@@ -22,9 +22,12 @@ class MeeduVideoPlayer extends StatefulWidget {
     Responsive responsive,
   ) bottomRight;
 
-  MeeduVideoPlayer(
-      {Key key, @required this.controller, this.header, this.bottomRight})
-      : assert(controller != null),
+  MeeduVideoPlayer({
+    Key key,
+    @required this.controller,
+    this.header,
+    this.bottomRight,
+  })  : assert(controller != null),
         super(key: key);
 
   @override
@@ -87,16 +90,31 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MeeduPlayerController>(
-      init: this.widget.controller,
-      builder: (_) {
-        return Container(
-          color: Colors.black,
-          child: Obx(
-            () => _getView(_),
-          ),
-        );
-      },
+    return MeeduPlayerProvider(
+      child: Container(
+        color: Colors.black,
+        width: 0.0,
+        height: 0.0,
+        child: Obx(
+          () => _getView(widget.controller),
+        ),
+      ),
+      controller: widget.controller,
     );
+  }
+}
+
+class MeeduPlayerProvider extends InheritedWidget {
+  final MeeduPlayerController controller;
+
+  MeeduPlayerProvider({
+    Key key,
+    @required Widget child,
+    @required this.controller,
+  }) : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    return false;
   }
 }

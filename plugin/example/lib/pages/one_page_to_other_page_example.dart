@@ -13,7 +13,7 @@ class _OnePageExampleState extends State<OnePageExample> {
   // read the documentation https://the-meedu-app.github.io/flutter-meedu-player/#/picture-in-picture
   // to enable the pip (picture in picture) support on Android
   MeeduPlayerController _meeduPlayerController = MeeduPlayerController(
-    controlsStyle: ControlsStyle.primary,
+    controlsStyle: ControlsStyle.secondary,
     pipEnabled: true, // enable  pip on android
     showPipButton: true, // use false to hide pip button in the player
   );

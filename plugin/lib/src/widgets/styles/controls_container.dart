@@ -8,21 +8,20 @@ class ControlsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MeeduPlayerController>(
-      builder: (_) => Positioned.fill(
-        child: Obx(
-          () => GestureDetector(
-            onTap: () => _.controls = !_.showControls,
-            child: AnimatedOpacity(
-              opacity: _.showControls ? 1 : 0,
+    final _ = MeeduPlayerController.of(context);
+    return Positioned.fill(
+      child: Obx(
+        () => GestureDetector(
+          onTap: () => _.controls = !_.showControls,
+          child: AnimatedOpacity(
+            opacity: _.showControls ? 1 : 0,
+            duration: Duration(milliseconds: 300),
+            child: AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                color: _.showControls ? Colors.black38 : Colors.transparent,
-                child: AbsorbPointer(
-                  absorbing: !_.showControls,
-                  child: this.child,
-                ),
+              color: _.showControls ? Colors.black38 : Colors.transparent,
+              child: AbsorbPointer(
+                absorbing: !_.showControls,
+                child: this.child,
               ),
             ),
           ),
