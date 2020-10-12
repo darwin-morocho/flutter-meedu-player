@@ -37,6 +37,8 @@ class MeeduPlayerController extends GetxController {
   final bool pipEnabled, showPipButton;
   BuildContext _pipContextToFullscreen;
 
+  String tag;
+
   // OBSERVABLES
   Rx<Duration> _position = Duration.zero.obs;
   Rx<Duration> _sliderPosition = Duration.zero.obs;
@@ -136,6 +138,7 @@ class MeeduPlayerController extends GetxController {
     this.pipEnabled = false,
     this.showPipButton = false,
   }) {
+    this.tag = DateTime.now().microsecondsSinceEpoch.toString();
     this.placeholder = placeholder ??
         SpinKitWave(
           size: 30,
@@ -451,10 +454,13 @@ class MeeduPlayerController extends GetxController {
 
   /// dispose de video_player controller
   Future<void> dispose() async {
-    _videoPlayerController?.removeListener(this._listener);
-    _timer?.cancel();
-    await _videoPlayerController?.dispose();
-    _videoPlayerController = null;
+    if (_videoPlayerController != null) {
+      dataStatus.status.value = DataStatus.none;
+      _videoPlayerController?.removeListener(this._listener);
+      _timer?.cancel();
+      await _videoPlayerController?.dispose();
+      _videoPlayerController = null;
+    }
   }
 
   /// enable or diable the visibility of ClosedCaptionFile

@@ -6,7 +6,6 @@ import 'package:meedu_player/src/helpers/utils.dart';
 import 'package:meedu_player/src/widgets/fullscreen_button.dart';
 import 'package:meedu_player/src/widgets/mute_sound_button.dart';
 import 'package:meedu_player/src/widgets/pip_button.dart';
-import 'package:meedu_player/src/widgets/player_button.dart';
 import 'package:meedu_player/src/widgets/player_slider.dart';
 
 class PrimaryBottomControls extends StatelessWidget {

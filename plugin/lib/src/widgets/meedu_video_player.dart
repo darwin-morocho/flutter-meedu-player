@@ -33,6 +33,7 @@ class MeeduVideoPlayer extends StatefulWidget {
 
 class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
   Widget _getView(MeeduPlayerController _) {
+    print("✅ _.dataStatus ${_.dataStatus.status}");
     if (_.dataStatus.none) return Container();
     if (_.dataStatus.loading) {
       return Center(

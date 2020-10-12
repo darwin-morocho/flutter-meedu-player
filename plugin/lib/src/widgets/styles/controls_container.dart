@@ -29,6 +29,5 @@ class ControlsContainer extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }

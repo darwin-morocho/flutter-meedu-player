@@ -3,6 +3,7 @@ import 'package:player_example/pages/basic_example_page.dart';
 import 'package:player_example/pages/change_quality_example_page.dart';
 import 'package:player_example/pages/fullscreen_example_page.dart';
 import 'package:player_example/pages/network_with_subtitle_page.dart';
+import 'package:player_example/pages/one_page_to_other_page_example.dart';
 import 'package:player_example/pages/playback_speed_example_page.dart';
 import 'package:player_example/pages/player_with_header_page.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         "subtitles": (_) => NetworkWithSubtitlesPage(),
         "playback-speed": (_) => PlayBackSpeedExamplePage(),
         "quality-change": (_) => ChangeQualityExamplePage(),
+        "one-page-to-other": (_) => OnePageExample(),
       },
     );
   }
@@ -70,6 +72,12 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, 'quality-change');
             },
             child: Text("Quality Change example"),
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.pushNamed(context, 'one-page-to-other');
+            },
+            child: Text("One Page to other"),
           )
         ],
       ),
