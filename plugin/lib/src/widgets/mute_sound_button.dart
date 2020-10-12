@@ -11,19 +11,18 @@ class MuteSoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MeeduPlayerController>(
-      builder: (_) => Obx(() {
-        return PlayerButton(
-          size: responsive.ip(_.fullscreen ? 5 : 7),
-          circle: false,
-          backgrounColor: Colors.transparent,
-          iconColor: Colors.white,
-          iconPath: _.mute ? 'assets/icons/mute.png' : 'assets/icons/sound.png',
-          onPressed: () {
-            _.setMute(!_.mute);
-          },
-        );
-      }),
-    );
+    final _ = MeeduPlayerController.of(context);
+    return Obx(() {
+      return PlayerButton(
+        size: responsive.ip(_.fullscreen ? 5 : 7),
+        circle: false,
+        backgrounColor: Colors.transparent,
+        iconColor: Colors.white,
+        iconPath: _.mute ? 'assets/icons/mute.png' : 'assets/icons/sound.png',
+        onPressed: () {
+          _.setMute(!_.mute);
+        },
+      );
+    });
   }
 }

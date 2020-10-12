@@ -11,18 +11,17 @@ class PipButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MeeduPlayerController>(
-      builder: (_) => Obx(() {
-        if (!_.pipAvailable || !_.showPipButton) return Container();
-        return PlayerButton(
-          size: responsive.ip(_.fullscreen ? 5 : 7),
-          circle: false,
-          backgrounColor: Colors.transparent,
-          iconColor: Colors.white,
-          iconPath: 'assets/icons/picture-in-picture.png',
-          onPressed: () => _.enterPip(context),
-        );
-      }),
-    );
+    final _ = MeeduPlayerController.of(context);
+    return Obx(() {
+      if (!_.pipAvailable || !_.showPipButton) return Container();
+      return PlayerButton(
+        size: responsive.ip(_.fullscreen ? 5 : 7),
+        circle: false,
+        backgrounColor: Colors.transparent,
+        iconColor: Colors.white,
+        iconPath: 'assets/icons/picture-in-picture.png',
+        onPressed: () => _.enterPip(context),
+      );
+    });
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/state_manager.dart';
-import 'package:meedu_player/meedu_player.dart';
+import 'package:meedu_player/meedu_player.dart' show MeeduPlayerProvider;
 import 'package:meedu_player/src/helpers/data_source.dart';
 import 'package:meedu_player/src/helpers/meedu_player_status.dart';
 import 'package:meedu_player/src/helpers/player_data_status.dart';
@@ -14,7 +14,7 @@ import 'package:video_player/video_player.dart';
 
 enum ControlsStyle { primary, secondary }
 
-class MeeduPlayerController extends GetxController {
+class MeeduPlayerController {
   /// the video_player controller
   VideoPlayerController _videoPlayerController;
   final _pipManager = PipManager();
@@ -490,5 +490,11 @@ class MeeduPlayerController extends GetxController {
       Navigator.pop(_pipContextToFullscreen); // close the fullscreen
       _pipContextToFullscreen = null;
     }
+  }
+
+  static MeeduPlayerController of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>()
+        .controller;
   }
 }

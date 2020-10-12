@@ -8,75 +8,74 @@ class PlayerSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MeeduPlayerController>(
-      builder: (_) => Stack(
-        alignment: Alignment.centerLeft,
-        children: [
-          Container(
-            child: LayoutBuilder(builder: (ctx, constraints) {
-              return Obx(
-                () {
-                  // convert the bufferedLoaded to a percent using the video duration as a 100%
-                  double percent = 0;
-                  if (_.bufferedLoaded != null &&
-                      _.bufferedLoaded.inSeconds > 0) {
-                    percent = _.bufferedLoaded.inSeconds / _.duration.inSeconds;
-                  }
-                  // draw the  bufferedLoaded as a container
-                  return AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    color: Colors.white30,
-                    width: constraints.maxWidth * percent,
-                    height: 3,
-                  );
-                },
-              );
-            }),
-          ),
-          Obx(
-            () {
-              final int value = _.sliderPosition.inSeconds;
-              final double max = _.duration.inSeconds.toDouble();
-              if (value > max || max <= 0) {
-                return Container();
-              }
-              return Container(
-                constraints: BoxConstraints(
-                  maxHeight: 30,
+    final _ = MeeduPlayerController.of(context);
+    return Stack(
+      alignment: Alignment.centerLeft,
+      children: [
+        Container(
+          child: LayoutBuilder(builder: (ctx, constraints) {
+            return Obx(
+              () {
+                // convert the bufferedLoaded to a percent using the video duration as a 100%
+                double percent = 0;
+                if (_.bufferedLoaded != null &&
+                    _.bufferedLoaded.inSeconds > 0) {
+                  percent = _.bufferedLoaded.inSeconds / _.duration.inSeconds;
+                }
+                // draw the  bufferedLoaded as a container
+                return AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  color: Colors.white30,
+                  width: constraints.maxWidth * percent,
+                  height: 3,
+                );
+              },
+            );
+          }),
+        ),
+        Obx(
+          () {
+            final int value = _.sliderPosition.inSeconds;
+            final double max = _.duration.inSeconds.toDouble();
+            if (value > max || max <= 0) {
+              return Container();
+            }
+            return Container(
+              constraints: BoxConstraints(
+                maxHeight: 30,
+              ),
+              padding: EdgeInsets.only(bottom: 8),
+              alignment: Alignment.center,
+              child: SliderTheme(
+                data: SliderThemeData(
+                  trackShape: MSliderTrackShape(),
+                  thumbColor: _.colorTheme,
+                  activeTrackColor: _.colorTheme,
+                  trackHeight: 10,
+                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 4.0),
                 ),
-                padding: EdgeInsets.only(bottom: 8),
-                alignment: Alignment.center,
-                child: SliderTheme(
-                  data: SliderThemeData(
-                    trackShape: MSliderTrackShape(),
-                    thumbColor: _.colorTheme,
-                    activeTrackColor: _.colorTheme,
-                    trackHeight: 10,
-                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 4.0),
-                  ),
-                  child: Slider(
-                    min: 0,
-                    divisions: _.duration.inSeconds,
-                    value: value.toDouble(),
-                    onChangeStart: (v) {
-                      _.onChangedSliderStart();
-                    },
-                    onChangeEnd: (v) {
-                      _.onChangedSliderEnd();
-                      _.seekTo(
-                        Duration(seconds: v.floor()),
-                      );
-                    },
-                    label: printDuration(_.sliderPosition),
-                    max: max,
-                    onChanged: _.onChangedSlider,
-                  ),
+                child: Slider(
+                  min: 0,
+                  divisions: _.duration.inSeconds,
+                  value: value.toDouble(),
+                  onChangeStart: (v) {
+                    _.onChangedSliderStart();
+                  },
+                  onChangeEnd: (v) {
+                    _.onChangedSliderEnd();
+                    _.seekTo(
+                      Duration(seconds: v.floor()),
+                    );
+                  },
+                  label: printDuration(_.sliderPosition),
+                  max: max,
+                  onChanged: _.onChangedSlider,
                 ),
-              );
-            },
-          )
-        ],
-      ),
+              ),
+            );
+          },
+        )
+      ],
     );
   }
 }
