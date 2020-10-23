@@ -12,16 +12,18 @@ dependencies:
   flutter:
     sdk: flutter
   wakelock: ^0.1.4+2
-  meedu_player:
-    path: ../
+  file_picker: ^2.0.10
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  meedu_player:
+    path: ../
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

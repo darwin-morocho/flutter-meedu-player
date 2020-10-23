@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'meedu_player'
-  s.version          = '0.3.0'
+  s.version          = '0.3.4'
   s.summary          = 'A new Flutter UI video controls for the flutter video_player plugin.'
   s.description      = <<-DESC
   A new Flutter UI video controls for the flutter video_player plugin..

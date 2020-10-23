@@ -436,6 +436,7 @@ class MeeduPlayerController {
     bool looping = false,
     Widget header,
     Widget bottomRight,
+    Duration seekTo,
   }) async {
     this.header = header;
     this.bottomRight = bottomRight;
@@ -443,9 +444,11 @@ class MeeduPlayerController {
       dataSource,
       autoplay: autoplay,
       looping: looping,
+      seekTo: seekTo,
     );
     await goToFullscreen(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _position.value = Duration.zero;
       _timer?.cancel();
       await pause();
       _videoPlayerController?.removeListener(this._listener);

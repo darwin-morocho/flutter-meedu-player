@@ -1,3 +1,6 @@
+## [0.3.4]
+- Updated examples
+
 ## [0.3.3]
 - Removed GetxController
 
