@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:player_example/pages/basic_example_page.dart';
 import 'package:player_example/pages/change_quality_example_page.dart';
+import 'package:player_example/pages/custom_icons_example.dart';
+import 'package:player_example/pages/disabled_buttons_example_page.dart';
 import 'package:player_example/pages/fullscreen_example_page.dart';
 import 'package:player_example/pages/network_with_subtitle_page.dart';
 import 'package:player_example/pages/one_page_to_other_page_example.dart';
@@ -26,6 +28,8 @@ class MyApp extends StatelessWidget {
         "quality-change": (_) => ChangeQualityExamplePage(),
         "one-page-to-other": (_) => OnePageExample(),
         "pick-file": (_) => PickFileExamplePage(),
+        "custom-icons": (_) => CustomIconsExamplePage(),
+        "disabled-buttons": (_) => DisabledButtonsExample(),
       },
     );
   }
@@ -86,6 +90,18 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, 'pick-file');
             },
             child: Text("Pick file"),
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.pushNamed(context, 'custom-icons');
+            },
+            child: Text("Custom Icons"),
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.pushNamed(context, 'disabled-buttons');
+            },
+            child: Text("Disabled Buttons"),
           )
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/controller.dart';
 import 'package:meedu_player/src/helpers/responsive.dart';
 import 'package:meedu_player/src/widgets/closed_caption_view.dart';
@@ -22,11 +23,16 @@ class MeeduVideoPlayer extends StatefulWidget {
     Responsive responsive,
   ) bottomRight;
 
+  final CustomIcons Function(
+    Responsive responsive,
+  ) customIcons;
+
   MeeduVideoPlayer({
     Key key,
     @required this.controller,
     this.header,
     this.bottomRight,
+    this.customIcons,
   })  : assert(controller != null),
         super(key: key);
 
@@ -58,6 +64,10 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
           constraints.maxWidth,
           constraints.maxHeight,
         );
+
+        if (widget.customIcons != null) {
+          _.customIcons = this.widget.customIcons(responsive);
+        }
 
         if (widget.header != null) {
           _.header = this.widget.header(context, _, responsive);

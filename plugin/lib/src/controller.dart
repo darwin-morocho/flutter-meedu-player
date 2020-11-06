@@ -4,7 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/state_manager.dart';
 import 'package:meedu_player/meedu_player.dart' show MeeduPlayerProvider;
+import 'package:meedu_player/src/helpers/custom_icons.dart';
 import 'package:meedu_player/src/helpers/data_source.dart';
+import 'package:meedu_player/src/helpers/enabled_buttons.dart';
 import 'package:meedu_player/src/helpers/meedu_player_status.dart';
 import 'package:meedu_player/src/helpers/player_data_status.dart';
 import 'package:meedu_player/src/helpers/screen_manager.dart';
@@ -21,6 +23,12 @@ class MeeduPlayerController {
 
   /// Screen Manager to define the overlays and device orientation when the player enters in fullscreen mode
   final ScreenManager screenManager;
+
+  /// use this class to change the default icons with your custom icons
+  CustomIcons customIcons;
+
+  /// use this class to hide some buttons in the player
+  EnabledButtons enabledButtons;
 
   /// the playerStatus to notify the player events like paused,playing or stopped
   /// [playerStatus] has a [status] observable
@@ -61,15 +69,22 @@ class MeeduPlayerController {
 
   // GETS
 
+  /// use this stream to listen the player data events like none, loading, loaded, error
   Stream<DataStatus> get onDataStatusChanged => dataStatus.status.stream;
+
+  /// use this stream to listen the player data events like stopped, playing, paused
   Stream<PlayerStatus> get onPlayerStatusChanged => playerStatus.status.stream;
 
   /// current position of the player
   Duration get position => _position.value;
+
+  /// use this stream to listen the changes in the video position
   Stream<Duration> get onPositionChanged => _position.stream;
 
   /// duration of the video
   Duration get duration => _duration.value;
+
+  /// use this stream to listen the changes in the video duration
   Stream<Duration> get onDurationChanged => _duration.stream;
 
   /// [mute] is true if the player is muted
@@ -105,8 +120,7 @@ class MeeduPlayerController {
   bool get autoplay => _autoplay;
 
   bool get closedCaptionEnabled => _closedCaptionEnabled.value;
-  Stream<bool> get onClosedCaptionEnabledChanged =>
-      _closedCaptionEnabled.stream;
+  Stream<bool> get onClosedCaptionEnabledChanged => _closedCaptionEnabled.stream;
 
   /// [isInPipMode] is true if pip mode is enabled
   bool get isInPipMode => _pipManager.isInPipMode.value;
@@ -137,6 +151,8 @@ class MeeduPlayerController {
     this.bottomRight,
     this.pipEnabled = false,
     this.showPipButton = false,
+    this.customIcons = const CustomIcons(),
+    this.enabledButtons = const EnabledButtons(),
   }) {
     this.tag = DateTime.now().microsecondsSinceEpoch.toString();
     this.placeholder = placeholder ??
@@ -228,8 +244,7 @@ class MeeduPlayerController {
     }
 
     // check if the player has been finished
-    if (_position.value.inSeconds >= duration.inSeconds &&
-        !playerStatus.stopped) {
+    if (_position.value.inSeconds >= duration.inSeconds && !playerStatus.stopped) {
       playerStatus.status.value = PlayerStatus.stopped;
     }
   }
@@ -249,8 +264,7 @@ class MeeduPlayerController {
       dataStatus.status.value = DataStatus.loading;
 
       // if we are playing a video
-      if (_videoPlayerController != null &&
-          _videoPlayerController.value.isPlaying) {
+      if (_videoPlayerController != null && _videoPlayerController.value.isPlaying) {
         await this.pause(notify: false);
       }
 
@@ -263,8 +277,7 @@ class MeeduPlayerController {
       if (oldController != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           oldController?.removeListener(this._listener);
-          await oldController
-              ?.dispose(); // dispose the previous video controller
+          await oldController?.dispose(); // dispose the previous video controller
         });
       }
 
@@ -496,8 +509,6 @@ class MeeduPlayerController {
   }
 
   static MeeduPlayerController of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>()
-        .controller;
+    return context.dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>().controller;
   }
 }

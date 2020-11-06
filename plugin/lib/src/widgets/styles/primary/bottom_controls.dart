@@ -10,8 +10,7 @@ import 'package:meedu_player/src/widgets/player_slider.dart';
 
 class PrimaryBottomControls extends StatelessWidget {
   final Responsive responsive;
-  const PrimaryBottomControls({Key key, @required this.responsive})
-      : super(key: key);
+  const PrimaryBottomControls({Key key, @required this.responsive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +55,14 @@ class PrimaryBottomControls extends StatelessWidget {
           SizedBox(width: 15),
           if (_.bottomRight != null) ...[_.bottomRight, SizedBox(width: 5)],
 
-          PipButton(responsive: responsive),
+          if (_.enabledButtons.pip) PipButton(responsive: responsive),
 
-          MuteSoundButton(responsive: responsive),
+          if (_.enabledButtons.muteAndSound) MuteSoundButton(responsive: responsive),
 
-          FullscreenButton(
-            size: responsive.ip(_.fullscreen ? 5 : 7),
-          )
+          if (_.enabledButtons.fullscreen)
+            FullscreenButton(
+              size: responsive.ip(_.fullscreen ? 5 : 7),
+            )
         ],
       ),
     );

@@ -20,6 +20,7 @@ class PipButton extends StatelessWidget {
         backgrounColor: Colors.transparent,
         iconColor: Colors.white,
         iconPath: 'assets/icons/picture-in-picture.png',
+        customIcon: _.customIcons.pip,
         onPressed: () => _.enterPip(context),
       );
     });

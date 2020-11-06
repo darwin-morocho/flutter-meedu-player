@@ -12,23 +12,31 @@ class FullscreenButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
     return Obx(
-      () => PlayerButton(
-        size: size,
-        circle: false,
-        backgrounColor: Colors.transparent,
-        iconColor: Colors.white,
-        iconPath: _.fullscreen
-            ? 'assets/icons/minimize.png'
-            : 'assets/icons/fullscreen.png',
-        onPressed: () {
-          if (_.fullscreen) {
-            // exit to fullscreen
-            Navigator.pop(context);
-          } else {
-            _.goToFullscreen(context);
-          }
-        },
-      ),
+      () {
+        String iconPath = 'assets/icons/minimize.png';
+        Widget customIcon = _.customIcons.minimize;
+
+        if (!_.fullscreen) {
+          iconPath = 'assets/icons/fullscreen.png';
+          customIcon = _.customIcons.fullscreen;
+        }
+        return PlayerButton(
+          size: size,
+          circle: false,
+          backgrounColor: Colors.transparent,
+          iconColor: Colors.white,
+          iconPath: iconPath,
+          customIcon: customIcon,
+          onPressed: () {
+            if (_.fullscreen) {
+              // exit to fullscreen
+              Navigator.pop(context);
+            } else {
+              _.goToFullscreen(context);
+            }
+          },
+        );
+      },
     );
   }
 }

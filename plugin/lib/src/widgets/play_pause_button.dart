@@ -14,10 +14,13 @@ class PlayPauseButton extends StatelessWidget {
     return Obx(
       () {
         String iconPath = 'assets/icons/repeat.png';
+        Widget customIcon = _.customIcons.repeat;
         if (_.playerStatus.playing) {
           iconPath = 'assets/icons/pause.png';
+          customIcon = _.customIcons.pause;
         } else if (_.playerStatus.paused) {
           iconPath = 'assets/icons/play.png';
+          customIcon = _.customIcons.play;
         }
         return PlayerButton(
           backgrounColor: Colors.transparent,
@@ -33,6 +36,7 @@ class PlayPauseButton extends StatelessWidget {
           },
           size: size,
           iconPath: iconPath,
+          customIcon: customIcon,
         );
       },
     );

@@ -9,8 +9,7 @@ import '../../player_button.dart';
 
 class PrimaryVideoPlayerControls extends StatelessWidget {
   final Responsive responsive;
-  const PrimaryVideoPlayerControls({Key key, @required this.responsive})
-      : super(key: key);
+  const PrimaryVideoPlayerControls({Key key, @required this.responsive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,25 +31,32 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              PlayerButton(
-                onPressed: _.rewind,
-                size: responsive.ip(_.fullscreen ? 8 : 12),
-                iconColor: Colors.white,
-                backgrounColor: Colors.transparent,
-                iconPath: 'assets/icons/rewind.png',
-              ),
-              SizedBox(width: 10),
-              PlayPauseButton(
-                size: responsive.ip(_.fullscreen ? 10 : 15),
-              ),
-              SizedBox(width: 10),
-              PlayerButton(
-                onPressed: _.fastForward,
-                iconColor: Colors.white,
-                backgrounColor: Colors.transparent,
-                size: responsive.ip(_.fullscreen ? 8 : 12),
-                iconPath: 'assets/icons/fast-forward.png',
-              ),
+              if (_.enabledButtons.rewindAndfastForward) ...[
+                PlayerButton(
+                  onPressed: _.rewind,
+                  size: responsive.ip(_.fullscreen ? 8 : 12),
+                  iconColor: Colors.white,
+                  backgrounColor: Colors.transparent,
+                  iconPath: 'assets/icons/rewind.png',
+                  customIcon: _.customIcons.rewind,
+                ),
+                SizedBox(width: 10),
+              ],
+              if (_.enabledButtons.playPauseAndRepeat)
+                PlayPauseButton(
+                  size: responsive.ip(_.fullscreen ? 10 : 15),
+                ),
+              if (_.enabledButtons.rewindAndfastForward) ...[
+                SizedBox(width: 10),
+                PlayerButton(
+                  onPressed: _.fastForward,
+                  iconColor: Colors.white,
+                  backgrounColor: Colors.transparent,
+                  size: responsive.ip(_.fullscreen ? 8 : 12),
+                  iconPath: 'assets/icons/fast-forward.png',
+                  customIcon: _.customIcons.fastForward,
+                ),
+              ]
             ],
           ),
 

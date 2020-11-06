@@ -1,6 +1,6 @@
 name: meedu_player
 description: A new Flutter UI video controls for the flutter video_player plugin.
-version: 0.3.4
+version: 0.4.0
 homepage: https://github.com/the-meedu-app/flutter-meedu-player/tree/master/plugin
 
 environment:
@@ -11,10 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  video_player: ^0.11.0
-  get: ^3.11.1
+  video_player: ^1.0.0
+  get: ^3.15.0
   flutter_spinkit: ^4.1.2+1
-  meta: ^1.1.8
+  meta: ^1.1.8 
   
 dev_dependencies:
   flutter_test:

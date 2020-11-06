@@ -7,6 +7,8 @@ class PlayerButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color backgrounColor, iconColor;
   final bool circle;
+  final Widget customIcon;
+
   const PlayerButton({
     Key key,
     this.size = 40,
@@ -15,6 +17,7 @@ class PlayerButton extends StatelessWidget {
     this.circle = true,
     this.backgrounColor = Colors.white54,
     this.iconColor = Colors.black,
+    this.customIcon,
   }) : super(key: key);
 
   @override
@@ -22,20 +25,21 @@ class PlayerButton extends StatelessWidget {
     return CupertinoButton(
       padding: EdgeInsets.zero,
       minSize: 20,
-      child: Container(
-        width: this.size,
-        height: this.size,
-        padding: EdgeInsets.all(this.size * 0.25),
-        child: Image.asset(
-          this.iconPath,
-          color: this.iconColor,
-          package: 'meedu_player',
-        ),
-        decoration: BoxDecoration(
-          color: this.backgrounColor,
-          shape: this.circle ? BoxShape.circle : BoxShape.rectangle,
-        ),
-      ),
+      child: customIcon ??
+          Container(
+            width: this.size,
+            height: this.size,
+            padding: EdgeInsets.all(this.size * 0.25),
+            child: Image.asset(
+              this.iconPath,
+              color: this.iconColor,
+              package: 'meedu_player',
+            ),
+            decoration: BoxDecoration(
+              color: this.backgrounColor,
+              shape: this.circle ? BoxShape.circle : BoxShape.rectangle,
+            ),
+          ),
       onPressed: this.onPressed,
     );
   }

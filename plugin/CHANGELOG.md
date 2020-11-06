@@ -1,3 +1,10 @@
+## [0.4.0]
+- Added custom icons
+- Added hide buttons support
+- Updated examples
+- Updated to video_player:^1.0.0
+- Updated to get:^3.15.0
+
 ## [0.3.4]
 - Updated examples
 
