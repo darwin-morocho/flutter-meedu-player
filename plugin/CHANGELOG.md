@@ -1,3 +1,5 @@
+## [0.4.0+2]
+- Fixed broken urls in documentation.
 ## [0.4.0+1]
 - Fixed broken url in documentation.
 ## [0.4.0]
