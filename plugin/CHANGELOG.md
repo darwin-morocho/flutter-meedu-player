@@ -1,3 +1,5 @@
+## [0.4.0+1]
+- Fixed broken url in documentation.
 ## [0.4.0]
 - Added custom icons
 - Added hide buttons support

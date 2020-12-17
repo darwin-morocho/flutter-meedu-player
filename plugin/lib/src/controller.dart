@@ -120,7 +120,8 @@ class MeeduPlayerController {
   bool get autoplay => _autoplay;
 
   bool get closedCaptionEnabled => _closedCaptionEnabled.value;
-  Stream<bool> get onClosedCaptionEnabledChanged => _closedCaptionEnabled.stream;
+  Stream<bool> get onClosedCaptionEnabledChanged =>
+      _closedCaptionEnabled.stream;
 
   /// [isInPipMode] is true if pip mode is enabled
   bool get isInPipMode => _pipManager.isInPipMode.value;
@@ -244,7 +245,8 @@ class MeeduPlayerController {
     }
 
     // check if the player has been finished
-    if (_position.value.inSeconds >= duration.inSeconds && !playerStatus.stopped) {
+    if (_position.value.inSeconds >= duration.inSeconds &&
+        !playerStatus.stopped) {
       playerStatus.status.value = PlayerStatus.stopped;
     }
   }
@@ -264,7 +266,8 @@ class MeeduPlayerController {
       dataStatus.status.value = DataStatus.loading;
 
       // if we are playing a video
-      if (_videoPlayerController != null && _videoPlayerController.value.isPlaying) {
+      if (_videoPlayerController != null &&
+          _videoPlayerController.value.isPlaying) {
         await this.pause(notify: false);
       }
 
@@ -277,7 +280,8 @@ class MeeduPlayerController {
       if (oldController != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           oldController?.removeListener(this._listener);
-          await oldController?.dispose(); // dispose the previous video controller
+          await oldController
+              ?.dispose(); // dispose the previous video controller
         });
       }
 
@@ -509,6 +513,8 @@ class MeeduPlayerController {
   }
 
   static MeeduPlayerController of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>().controller;
+    return context
+        .dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>()
+        .controller;
   }
 }

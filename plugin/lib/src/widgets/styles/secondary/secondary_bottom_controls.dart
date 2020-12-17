@@ -11,7 +11,8 @@ import 'package:meedu_player/src/widgets/player_slider.dart';
 
 class SecondaryBottomControls extends StatelessWidget {
   final Responsive responsive;
-  const SecondaryBottomControls({Key key, @required this.responsive}) : super(key: key);
+  const SecondaryBottomControls({Key key, @required this.responsive})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,8 @@ class SecondaryBottomControls extends StatelessWidget {
                         text =
                             "${printDurationWithHours(_.position)} / ${printDurationWithHours(_.duration)}";
                       } else {
-                        text = "${printDuration(_.position)} / ${printDuration(_.duration)}";
+                        text =
+                            "${printDuration(_.position)} / ${printDuration(_.duration)}";
                       }
                       return Padding(
                         padding: EdgeInsets.only(right: 5),
@@ -85,9 +87,13 @@ class SecondaryBottomControls extends StatelessWidget {
               ),
               Row(
                 children: [
-                  if (_.bottomRight != null) ...[_.bottomRight, SizedBox(width: 10)],
+                  if (_.bottomRight != null) ...[
+                    _.bottomRight,
+                    SizedBox(width: 10)
+                  ],
                   if (_.enabledButtons.pip) PipButton(responsive: responsive),
-                  if (_.enabledButtons.muteAndSound) MuteSoundButton(responsive: responsive),
+                  if (_.enabledButtons.muteAndSound)
+                    MuteSoundButton(responsive: responsive),
                   if (_.enabledButtons.fullscreen) ...[
                     FullscreenButton(
                       size: buttonsSize,

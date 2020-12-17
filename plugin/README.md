@@ -30,4 +30,4 @@
 
 ---
 
-👋 👉 <b>[Complete documentation here](https://the-meedu-app.github.io/flutter-meedu-player)</b>
+👋 👉 <b>[Complete documentation here](https://darwin-morocho.github.io/flutter-meedu-player)</b>
