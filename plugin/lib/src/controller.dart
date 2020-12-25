@@ -39,8 +39,9 @@ class MeeduPlayerController {
   final MeeduPlayerDataStatus dataStatus = MeeduPlayerDataStatus();
   final Color colorTheme;
   final bool controlsEnabled;
-  final String errorText;
-  Widget placeholder, header, bottomRight;
+  String _errorText;
+  String get errorText => _errorText;
+  Widget loadingWidget, header, bottomRight;
   final ControlsStyle controlsStyle;
   final bool pipEnabled, showPipButton;
   BuildContext _pipContextToFullscreen;
@@ -51,7 +52,7 @@ class MeeduPlayerController {
   Rx<Duration> _position = Rx(Duration.zero);
   Rx<Duration> _sliderPosition = Rx(Duration.zero);
   Rx<Duration> _duration = Rx(Duration.zero);
-  Rx<Duration> _bufferedLoaded = Rx(Duration.zero);
+  Rx<List<DurationRange>> _buffered = Rx([]);
   Rx<bool> _closedCaptionEnabled = false.obs;
 
   Rx<bool> _mute = false.obs;
@@ -105,8 +106,8 @@ class MeeduPlayerController {
   Stream<Duration> get onSliderPositionChanged => _sliderPosition.stream;
 
   /// [bufferedLoaded] buffered Loaded for network resources
-  Rx<Duration> get bufferedLoaded => _bufferedLoaded;
-  Stream<Duration> get onBufferedLoadedChanged => _bufferedLoaded.stream;
+  Rx<List<DurationRange>> get buffered => _buffered;
+  Stream<List<DurationRange>> get onBufferedChanged => _buffered.stream;
 
   /// [videoPlayerController] instace of VideoPlayerController
   VideoPlayerController get videoPlayerController => _videoPlayerController;
@@ -121,11 +122,14 @@ class MeeduPlayerController {
   bool get autoplay => _autoplay;
 
   Rx<bool> get closedCaptionEnabled => _closedCaptionEnabled;
-  Stream<bool> get onClosedCaptionEnabledChanged => _closedCaptionEnabled.stream;
+  Stream<bool> get onClosedCaptionEnabledChanged =>
+      _closedCaptionEnabled.stream;
 
   /// [isInPipMode] is true if pip mode is enabled
   Rx<bool> get isInPipMode => _pipManager.isInPipMode;
   Stream<bool> get onPipModeChanged => _pipManager.isInPipMode.stream;
+
+  Rx<bool> isBuffering = true.obs;
 
   /// returns the os version
   Future<double> get osVersion async {
@@ -144,9 +148,9 @@ class MeeduPlayerController {
   MeeduPlayerController({
     this.screenManager = const ScreenManager(),
     this.colorTheme = Colors.redAccent,
-    Widget placeholder,
+    Widget loadingWidget,
     this.controlsEnabled = true,
-    this.errorText = 'Error',
+    String errorText,
     this.controlsStyle = ControlsStyle.primary,
     this.header,
     this.bottomRight,
@@ -155,8 +159,9 @@ class MeeduPlayerController {
     this.customIcons = const CustomIcons(),
     this.enabledButtons = const EnabledButtons(),
   }) {
+    _errorText = errorText;
     this.tag = DateTime.now().microsecondsSinceEpoch.toString();
-    this.placeholder = placeholder ??
+    this.loadingWidget = loadingWidget ??
         SpinKitWave(
           size: 30,
           color: this.colorTheme,
@@ -234,9 +239,14 @@ class MeeduPlayerController {
 
     // set the video buffered loaded
     final buffered = value.buffered;
+    print("value.buffered ${value.buffered.length}");
     if (buffered.isNotEmpty) {
-      _bufferedLoaded.value = buffered.last.end;
+      _buffered.value = buffered;
+      isBuffering.value =
+          value.isPlaying && position.inSeconds >= buffered.last.end.inSeconds;
     }
+
+    print("🤩  ${isBuffering.value}");
 
     // save the volume value
     final volume = value.volume;
@@ -245,7 +255,8 @@ class MeeduPlayerController {
     }
 
     // check if the player has been finished
-    if (_position.value.inSeconds >= duration.value.inSeconds && !playerStatus.stopped) {
+    if (_position.value.inSeconds >= duration.value.inSeconds &&
+        !playerStatus.stopped) {
       playerStatus.status.value = PlayerStatus.stopped;
     }
   }
@@ -265,7 +276,8 @@ class MeeduPlayerController {
       dataStatus.status.value = DataStatus.loading;
 
       // if we are playing a video
-      if (_videoPlayerController != null && _videoPlayerController.value.isPlaying) {
+      if (_videoPlayerController != null &&
+          _videoPlayerController.value.isPlaying) {
         await this.pause(notify: false);
       }
 
@@ -278,7 +290,8 @@ class MeeduPlayerController {
       if (oldController != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           oldController?.removeListener(this._listener);
-          await oldController?.dispose(); // dispose the previous video controller
+          await oldController
+              ?.dispose(); // dispose the previous video controller
         });
       }
 
@@ -293,6 +306,9 @@ class MeeduPlayerController {
     } catch (e, s) {
       print(e);
       print(s);
+      if (_errorText == null) {
+        _errorText = _videoPlayerController.value.errorDescription;
+      }
       dataStatus.status.value = DataStatus.error;
     }
   }
@@ -476,7 +492,7 @@ class MeeduPlayerController {
       _position.close();
       _sliderPosition.close();
       _duration.close();
-      _bufferedLoaded.close();
+      _buffered.close();
       _closedCaptionEnabled.close();
       _mute.close();
       _fullscreen.close();
@@ -523,6 +539,8 @@ class MeeduPlayerController {
   }
 
   static MeeduPlayerController of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>().controller;
+    return context
+        .dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>()
+        .controller;
   }
 }

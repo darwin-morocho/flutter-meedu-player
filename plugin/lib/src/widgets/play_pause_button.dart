@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/meedu_player.dart';
@@ -12,8 +13,17 @@ class PlayPauseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
     return RxBuilder(
-      observables: [_.playerStatus.status],
+      observables: [
+        _.playerStatus.status,
+        _.buffered,
+        _.isBuffering,
+        _.position
+      ],
       builder: (__) {
+        if (_.isBuffering.value) {
+          return CupertinoButton(child: _.loadingWidget, onPressed: _.pause);
+        }
+
         String iconPath = 'assets/icons/repeat.png';
         Widget customIcon = _.customIcons.repeat;
         if (_.playerStatus.playing) {

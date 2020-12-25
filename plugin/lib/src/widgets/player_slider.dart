@@ -15,12 +15,13 @@ class PlayerSlider extends StatelessWidget {
         Container(
           child: LayoutBuilder(builder: (ctx, constraints) {
             return RxBuilder(
-              observables: [_.bufferedLoaded, _.duration],
+              observables: [_.buffered, _.duration],
               builder: (__) {
                 // convert the bufferedLoaded to a percent using the video duration as a 100%
                 double percent = 0;
-                if (_.bufferedLoaded != null && _.bufferedLoaded.value.inSeconds > 0) {
-                  percent = _.bufferedLoaded.value.inSeconds / _.duration.value.inSeconds;
+                if (_.buffered.value.isNotEmpty) {
+                  final loaded = _.buffered.value.last.end;
+                  percent = loaded.inSeconds / _.duration.value.inSeconds;
                 }
                 // draw the  bufferedLoaded as a container
                 return AnimatedContainer(
@@ -92,7 +93,8 @@ class MSliderTrackShape extends RoundedRectSliderTrackShape {
   }) {
     final double trackHeight = 1;
     final double trackLeft = offset.dx;
-    final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2 + 4;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2 + 4;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }

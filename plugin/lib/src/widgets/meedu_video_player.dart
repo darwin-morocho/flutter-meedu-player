@@ -42,17 +42,16 @@ class MeeduVideoPlayer extends StatefulWidget {
 
 class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
   Widget _getView(MeeduPlayerController _) {
-    print("✅ _.dataStatus ${_.dataStatus.status}");
     if (_.dataStatus.none) return Container();
     if (_.dataStatus.loading) {
       return Center(
-        child: _.placeholder,
+        child: _.loadingWidget,
       );
     }
     if (_.dataStatus.error) {
       return Center(
         child: Text(
-          _.errorText,
+          _.errorText ?? 'Error',
           style: TextStyle(color: Colors.white),
         ),
       );
@@ -106,7 +105,10 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
         width: 0.0,
         height: 0.0,
         child: RxBuilder(
-          observables: [widget.controller.showControls, widget.controller.dataStatus.status],
+          observables: [
+            widget.controller.showControls,
+            widget.controller.dataStatus.status
+          ],
           builder: (__) => _getView(widget.controller),
         ),
       ),

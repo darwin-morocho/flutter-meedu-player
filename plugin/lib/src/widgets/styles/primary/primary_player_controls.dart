@@ -9,7 +9,8 @@ import '../../player_button.dart';
 
 class PrimaryVideoPlayerControls extends StatelessWidget {
   final Responsive responsive;
-  const PrimaryVideoPlayerControls({Key key, @required this.responsive}) : super(key: key);
+  const PrimaryVideoPlayerControls({Key key, @required this.responsive})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

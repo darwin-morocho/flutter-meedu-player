@@ -1,3 +1,8 @@
+## [0.4.1]
+- Added loading view while the video is playing.
+- Removed GetX.
+- Updated video_player to 1.0.1
+
 ## [0.4.0+3]
 - Updated documentation.
 ## [0.4.0+2]
