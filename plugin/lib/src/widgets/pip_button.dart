@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/helpers/responsive.dart';
 
@@ -12,17 +12,22 @@ class PipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
-    return Obx(() {
-      if (!_.pipAvailable || !_.showPipButton) return Container();
-      return PlayerButton(
-        size: responsive.ip(_.fullscreen ? 5 : 7),
-        circle: false,
-        backgrounColor: Colors.transparent,
-        iconColor: Colors.white,
-        iconPath: 'assets/icons/picture-in-picture.png',
-        customIcon: _.customIcons.pip,
-        onPressed: () => _.enterPip(context),
-      );
-    });
+    return RxBuilder(
+        observables: [
+          _.pipAvailable,
+          _.fullscreen,
+        ],
+        builder: (__) {
+          if (!_.pipAvailable.value || !_.showPipButton) return Container();
+          return PlayerButton(
+            size: responsive.ip(_.fullscreen.value ? 5 : 7),
+            circle: false,
+            backgrounColor: Colors.transparent,
+            iconColor: Colors.white,
+            iconPath: 'assets/icons/picture-in-picture.png',
+            customIcon: _.customIcons.pip,
+            onPressed: () => _.enterPip(context),
+          );
+        });
   }
 }

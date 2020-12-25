@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/state_manager.dart';
 import 'package:meedu_player/meedu_player.dart' show MeeduPlayerProvider;
 import 'package:meedu_player/src/helpers/custom_icons.dart';
 import 'package:meedu_player/src/helpers/data_source.dart';
@@ -13,6 +12,7 @@ import 'package:meedu_player/src/helpers/screen_manager.dart';
 import 'package:meedu_player/src/native/pip_manager.dart';
 import 'package:meedu_player/src/widgets/fullscreen_page.dart';
 import 'package:video_player/video_player.dart';
+import 'package:meedu/rx.dart';
 
 enum ControlsStyle { primary, secondary }
 
@@ -48,16 +48,16 @@ class MeeduPlayerController {
   String tag;
 
   // OBSERVABLES
-  Rx<Duration> _position = Duration.zero.obs;
-  Rx<Duration> _sliderPosition = Duration.zero.obs;
-  Rx<Duration> _duration = Duration.zero.obs;
-  Rx<Duration> _bufferedLoaded = Duration.zero.obs;
-  RxBool _closedCaptionEnabled = false.obs;
+  Rx<Duration> _position = Rx(Duration.zero);
+  Rx<Duration> _sliderPosition = Rx(Duration.zero);
+  Rx<Duration> _duration = Rx(Duration.zero);
+  Rx<Duration> _bufferedLoaded = Rx(Duration.zero);
+  Rx<bool> _closedCaptionEnabled = false.obs;
 
-  RxBool _mute = false.obs;
-  RxBool _fullscreen = false.obs;
-  RxBool _showControls = true.obs;
-  RxBool _pipAvailable = false.obs;
+  Rx<bool> _mute = false.obs;
+  Rx<bool> _fullscreen = false.obs;
+  Rx<bool> _showControls = true.obs;
+  Rx<bool> _pipAvailable = false.obs;
 
   // NO OBSERVABLES
   bool _isSliderMoving = false;
@@ -66,6 +66,7 @@ class MeeduPlayerController {
   double _volumeBeforeMute = 0;
   double _playbackSpeed = 1.0;
   Timer _timer;
+  RxWorker _pipModeWorker;
 
   // GETS
 
@@ -76,35 +77,35 @@ class MeeduPlayerController {
   Stream<PlayerStatus> get onPlayerStatusChanged => playerStatus.status.stream;
 
   /// current position of the player
-  Duration get position => _position.value;
+  Rx<Duration> get position => _position;
 
   /// use this stream to listen the changes in the video position
   Stream<Duration> get onPositionChanged => _position.stream;
 
   /// duration of the video
-  Duration get duration => _duration.value;
+  Rx<Duration> get duration => _duration;
 
   /// use this stream to listen the changes in the video duration
   Stream<Duration> get onDurationChanged => _duration.stream;
 
   /// [mute] is true if the player is muted
-  bool get mute => _mute.value;
+  Rx<bool> get mute => _mute;
   Stream<bool> get onMuteChanged => _mute.stream;
 
   /// [fullscreen] is true if the player is in fullscreen mode
-  bool get fullscreen => _fullscreen.value;
+  Rx<bool> get fullscreen => _fullscreen;
   Stream<bool> get onFullscreenChanged => _fullscreen.stream;
 
   /// [showControls] is true if the player controls are visible
-  bool get showControls => _showControls.value;
+  Rx<bool> get showControls => _showControls;
   Stream<bool> get onShowControlsChanged => _showControls.stream;
 
   /// [sliderPosition] the video slider position
-  Duration get sliderPosition => _sliderPosition.value;
+  Rx<Duration> get sliderPosition => _sliderPosition;
   Stream<Duration> get onSliderPositionChanged => _sliderPosition.stream;
 
   /// [bufferedLoaded] buffered Loaded for network resources
-  Duration get bufferedLoaded => _bufferedLoaded.value;
+  Rx<Duration> get bufferedLoaded => _bufferedLoaded;
   Stream<Duration> get onBufferedLoadedChanged => _bufferedLoaded.stream;
 
   /// [videoPlayerController] instace of VideoPlayerController
@@ -119,12 +120,11 @@ class MeeduPlayerController {
   /// [autoPlay] is true if the player has enabled the autoplay
   bool get autoplay => _autoplay;
 
-  bool get closedCaptionEnabled => _closedCaptionEnabled.value;
-  Stream<bool> get onClosedCaptionEnabledChanged =>
-      _closedCaptionEnabled.stream;
+  Rx<bool> get closedCaptionEnabled => _closedCaptionEnabled;
+  Stream<bool> get onClosedCaptionEnabledChanged => _closedCaptionEnabled.stream;
 
   /// [isInPipMode] is true if pip mode is enabled
-  bool get isInPipMode => _pipManager.isInPipMode.value;
+  Rx<bool> get isInPipMode => _pipManager.isInPipMode;
   Stream<bool> get onPipModeChanged => _pipManager.isInPipMode.stream;
 
   /// returns the os version
@@ -133,7 +133,7 @@ class MeeduPlayerController {
   }
 
   /// returns true if the pip mode can used on the current device, the initial value will be false after check if pip is available
-  bool get pipAvailable => _pipAvailable.value;
+  Rx<bool> get pipAvailable => _pipAvailable;
 
   /// creates an instance of [MeeduPlayerControlle]
   ///
@@ -168,7 +168,7 @@ class MeeduPlayerController {
             (value) => _pipAvailable.value = value,
           );
       // listen the pip mode changes
-      ever<bool>(_pipManager.isInPipMode, this._onPipModeChanged);
+      _pipModeWorker = _pipManager.isInPipMode.ever(this._onPipModeChanged);
     } else {
       _pipAvailable.value = false;
     }
@@ -240,13 +240,12 @@ class MeeduPlayerController {
 
     // save the volume value
     final volume = value.volume;
-    if (!mute && _volumeBeforeMute != volume) {
+    if (!mute.value && _volumeBeforeMute != volume) {
       _volumeBeforeMute = volume;
     }
 
     // check if the player has been finished
-    if (_position.value.inSeconds >= duration.inSeconds &&
-        !playerStatus.stopped) {
+    if (_position.value.inSeconds >= duration.value.inSeconds && !playerStatus.stopped) {
       playerStatus.status.value = PlayerStatus.stopped;
     }
   }
@@ -266,8 +265,7 @@ class MeeduPlayerController {
       dataStatus.status.value = DataStatus.loading;
 
       // if we are playing a video
-      if (_videoPlayerController != null &&
-          _videoPlayerController.value.isPlaying) {
+      if (_videoPlayerController != null && _videoPlayerController.value.isPlaying) {
         await this.pause(notify: false);
       }
 
@@ -280,8 +278,7 @@ class MeeduPlayerController {
       if (oldController != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           oldController?.removeListener(this._listener);
-          await oldController
-              ?.dispose(); // dispose the previous video controller
+          await oldController?.dispose(); // dispose the previous video controller
         });
       }
 
@@ -392,15 +389,15 @@ class MeeduPlayerController {
 
   /// fast Forward (10 seconds)
   Future<void> fastForward() async {
-    final to = position.inSeconds + 10;
-    if (duration.inSeconds > to) {
+    final to = position.value.inSeconds + 10;
+    if (duration.value.inSeconds > to) {
       await seekTo(Duration(seconds: to));
     }
   }
 
   /// rewind (10 seconds)
   Future<void> rewind() async {
-    final to = position.inSeconds - 10;
+    final to = position.value.inSeconds - 10;
     await seekTo(Duration(seconds: to < 0 ? 0 : to));
   }
 
@@ -475,16 +472,29 @@ class MeeduPlayerController {
   /// dispose de video_player controller
   Future<void> dispose() async {
     if (_videoPlayerController != null) {
-      dataStatus.status.value = DataStatus.none;
-      _videoPlayerController?.removeListener(this._listener);
       _timer?.cancel();
+      _position.close();
+      _sliderPosition.close();
+      _duration.close();
+      _bufferedLoaded.close();
+      _closedCaptionEnabled.close();
+      _mute.close();
+      _fullscreen.close();
+      _showControls.close();
+      _pipAvailable.close();
+      _pipModeWorker?.dispose();
+      _pipManager.dispose();
+      playerStatus.status.close();
+      dataStatus.status.close();
+      _videoPlayerController?.removeListener(this._listener);
+
       await _videoPlayerController?.dispose();
       _videoPlayerController = null;
     }
   }
 
   /// enable or diable the visibility of ClosedCaptionFile
-  set closedCaptionEnabled(bool enabled) {
+  void onClosedCaptionEnabled(bool enabled) {
     _closedCaptionEnabled.value = enabled;
   }
 
@@ -492,9 +502,9 @@ class MeeduPlayerController {
   ///
   /// only available since Android 7
   Future<void> enterPip(BuildContext context) async {
-    if (this.pipAvailable && this.pipEnabled) {
+    if (this.pipAvailable.value && this.pipEnabled) {
       controls = false; // hide the controls
-      if (!fullscreen) {
+      if (!fullscreen.value) {
         // if the player is not in the fullscreen mode
         _pipContextToFullscreen = context;
         goToFullscreen(context, appliyOverlaysAndOrientations: false);
@@ -513,8 +523,6 @@ class MeeduPlayerController {
   }
 
   static MeeduPlayerController of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>()
-        .controller;
+    return context.dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>().controller;
   }
 }

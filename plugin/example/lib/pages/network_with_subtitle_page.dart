@@ -4,8 +4,7 @@ import 'package:meedu_player/meedu_player.dart';
 
 class NetworkWithSubtitlesPage extends StatefulWidget {
   @override
-  _NetworkWithSubtitlesPageState createState() =>
-      _NetworkWithSubtitlesPageState();
+  _NetworkWithSubtitlesPageState createState() => _NetworkWithSubtitlesPageState();
 }
 
 class _NetworkWithSubtitlesPageState extends State<NetworkWithSubtitlesPage> {
@@ -31,14 +30,13 @@ class _NetworkWithSubtitlesPageState extends State<NetworkWithSubtitlesPage> {
   _setDataSource() async {
     await _controller.setDataSource(
       DataSource(
-        source:
-            'https://thepaciellogroup.github.io/AT-browser-tests/video/ElephantsDream.mp4',
+        source: 'https://thepaciellogroup.github.io/AT-browser-tests/video/ElephantsDream.mp4',
         type: DataSourceType.network,
         closedCaptionFile: this._loadCaptions(),
       ),
       autoplay: true,
     );
-    _controller.closedCaptionEnabled = true;
+    _controller.onClosedCaptionEnabled(true);
   }
 
   Future<ClosedCaptionFile> _loadCaptions() async {
@@ -135,8 +133,7 @@ Great
                 ),
                 onPressed: () {
                   _subtitlesEnabled.value = !_subtitlesEnabled.value;
-                  this._controller.closedCaptionEnabled =
-                      _subtitlesEnabled.value;
+                  this._controller.onClosedCaptionEnabled(_subtitlesEnabled.value);
                 },
               );
             },

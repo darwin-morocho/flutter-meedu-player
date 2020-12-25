@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/helpers/responsive.dart';
 import 'package:meedu_player/src/helpers/utils.dart';
@@ -10,8 +10,7 @@ import 'package:meedu_player/src/widgets/player_slider.dart';
 
 class PrimaryBottomControls extends StatelessWidget {
   final Responsive responsive;
-  const PrimaryBottomControls({Key key, @required this.responsive})
-      : super(key: key);
+  const PrimaryBottomControls({Key key, @required this.responsive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +28,12 @@ class PrimaryBottomControls extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // START VIDEO POSITION
-          Obx(
-            () => Text(
-              _.duration.inMinutes >= 60
-                  ? printDurationWithHours(_.position)
-                  : printDuration(_.position),
+          RxBuilder(
+            observables: [_.duration, _.position],
+            builder: (__) => Text(
+              _.duration.value.inMinutes >= 60
+                  ? printDurationWithHours(_.position.value)
+                  : printDuration(_.position.value),
               style: textStyle,
             ),
           ),
@@ -44,11 +44,12 @@ class PrimaryBottomControls extends StatelessWidget {
           ),
           SizedBox(width: 10),
           // START VIDEO DURATION
-          Obx(
-            () => Text(
-              _.duration.inMinutes >= 60
-                  ? printDurationWithHours(_.duration)
-                  : printDuration(_.duration),
+          RxBuilder(
+            observables: [_.duration],
+            builder: (__) => Text(
+              _.duration.value.inMinutes >= 60
+                  ? printDurationWithHours(_.duration.value)
+                  : printDuration(_.duration.value),
               style: textStyle,
             ),
           ),
@@ -58,12 +59,11 @@ class PrimaryBottomControls extends StatelessWidget {
 
           if (_.enabledButtons.pip) PipButton(responsive: responsive),
 
-          if (_.enabledButtons.muteAndSound)
-            MuteSoundButton(responsive: responsive),
+          if (_.enabledButtons.muteAndSound) MuteSoundButton(responsive: responsive),
 
           if (_.enabledButtons.fullscreen)
             FullscreenButton(
-              size: responsive.ip(_.fullscreen ? 5 : 7),
+              size: responsive.ip(_.fullscreen.value ? 5 : 7),
             )
         ],
       ),

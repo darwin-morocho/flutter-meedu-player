@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/meedu_player.dart';
 
 import 'player_button.dart';
@@ -11,8 +11,9 @@ class PlayPauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
-    return Obx(
-      () {
+    return RxBuilder(
+      observables: [_.playerStatus.status],
+      builder: (__) {
         String iconPath = 'assets/icons/repeat.png';
         Widget customIcon = _.customIcons.repeat;
         if (_.playerStatus.playing) {

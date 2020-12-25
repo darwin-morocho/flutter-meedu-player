@@ -1,9 +1,9 @@
-import 'package:get/state_manager.dart';
+import 'package:meedu/rx.dart';
 
 enum PlayerStatus { stopped, playing, paused }
 
 class MeeduPlayerStatus {
-  Rx<PlayerStatus> status = PlayerStatus.paused.obs;
+  Rx<PlayerStatus> status = Rx(PlayerStatus.paused);
 
   bool get playing {
     return status.value == PlayerStatus.playing;

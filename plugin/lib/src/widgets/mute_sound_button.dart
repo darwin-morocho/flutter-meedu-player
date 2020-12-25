@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/helpers/responsive.dart';
 
@@ -12,26 +12,28 @@ class MuteSoundButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
-    return Obx(() {
-      String iconPath = 'assets/icons/mute.png';
-      Widget customIcon = _.customIcons.mute;
+    return RxBuilder(
+        observables: [_.mute, _.fullscreen],
+        builder: (__) {
+          String iconPath = 'assets/icons/mute.png';
+          Widget customIcon = _.customIcons.mute;
 
-      if (!_.mute) {
-        iconPath = 'assets/icons/sound.png';
-        customIcon = _.customIcons.sound;
-      }
+          if (!_.mute.value) {
+            iconPath = 'assets/icons/sound.png';
+            customIcon = _.customIcons.sound;
+          }
 
-      return PlayerButton(
-        size: responsive.ip(_.fullscreen ? 5 : 7),
-        circle: false,
-        backgrounColor: Colors.transparent,
-        iconColor: Colors.white,
-        iconPath: iconPath,
-        customIcon: customIcon,
-        onPressed: () {
-          _.setMute(!_.mute);
-        },
-      );
-    });
+          return PlayerButton(
+            size: responsive.ip(_.fullscreen.value ? 5 : 7),
+            circle: false,
+            backgrounColor: Colors.transparent,
+            iconColor: Colors.white,
+            iconPath: iconPath,
+            customIcon: customIcon,
+            onPressed: () {
+              _.setMute(!_.mute.value);
+            },
+          );
+        });
   }
 }

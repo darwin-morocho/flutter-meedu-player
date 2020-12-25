@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
-import 'package:get/state_manager.dart';
+import 'package:meedu/rx.dart';
 
 class PipManager {
   final _channel = MethodChannel("app.meedu.player");
@@ -10,7 +10,7 @@ class PipManager {
   Completer<double> _osVersion = Completer();
   Completer<bool> _pipAvailable = Completer();
 
-  RxBool isInPipMode = false.obs;
+  Rx<bool> isInPipMode = false.obs;
 
   PipManager() {
     _channel.setMethodCallHandler((call) async {
@@ -50,5 +50,9 @@ class PipManager {
     }
     this._pipAvailable.complete(available);
     return available;
+  }
+
+  Future<void> dispose() {
+    return isInPipMode.close();
   }
 }

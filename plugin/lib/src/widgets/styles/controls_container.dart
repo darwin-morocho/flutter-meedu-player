@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/src/controller.dart';
 
 class ControlsContainer extends StatelessWidget {
@@ -10,17 +10,18 @@ class ControlsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
     return Positioned.fill(
-      child: Obx(
-        () => GestureDetector(
-          onTap: () => _.controls = !_.showControls,
+      child: RxBuilder(
+        observables: [_.showControls],
+        builder: (__) => GestureDetector(
+          onTap: () => _.controls = !_.showControls.value,
           child: AnimatedOpacity(
-            opacity: _.showControls ? 1 : 0,
+            opacity: _.showControls.value ? 1 : 0,
             duration: Duration(milliseconds: 300),
             child: AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              color: _.showControls ? Colors.black38 : Colors.transparent,
+              color: _.showControls.value ? Colors.black38 : Colors.transparent,
               child: AbsorbPointer(
-                absorbing: !_.showControls,
+                absorbing: !_.showControls.value,
                 child: this.child,
               ),
             ),

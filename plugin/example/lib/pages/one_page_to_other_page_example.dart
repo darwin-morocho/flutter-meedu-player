@@ -47,10 +47,10 @@ class _OnePageExampleState extends State<OnePageExample> {
 
   Future<void> _meeduDispose() async {
     if (_meeduPlayerController != null) {
+      _playerEventSubs?.cancel();
       await _meeduPlayerController.dispose();
       _meeduPlayerController = null;
       // The next line disables the wakelock again.
-      await _playerEventSubs?.cancel();
       await Wakelock.disable();
     }
   }
@@ -59,15 +59,13 @@ class _OnePageExampleState extends State<OnePageExample> {
     _meeduPlayerController.setDataSource(
       DataSource(
         type: DataSourceType.network,
-        source:
-            "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
+        source: "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
       ),
       autoplay: true,
     );
   }
 
   Future<void> _gotTo() async {
-    await _meeduDispose();
     final route = MaterialPageRoute(
       builder: (_) => PageTwo(),
     );
@@ -151,8 +149,7 @@ class _PageTwoState extends State<PageTwo> {
     _meeduPlayerController.setDataSource(
       DataSource(
         type: DataSourceType.network,
-        source:
-            "https://movietrailers.apple.com/movies/fox/the-new-mutants/the-new-mutants-trailer-1_h720p.mov",
+        source: "https://movietrailers.apple.com/movies/fox/the-new-mutants/the-new-mutants-trailer-1_h720p.mov",
       ),
       autoplay: true,
     );

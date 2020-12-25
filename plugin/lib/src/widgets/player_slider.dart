@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/helpers/utils.dart';
 
@@ -14,13 +14,13 @@ class PlayerSlider extends StatelessWidget {
       children: [
         Container(
           child: LayoutBuilder(builder: (ctx, constraints) {
-            return Obx(
-              () {
+            return RxBuilder(
+              observables: [_.bufferedLoaded, _.duration],
+              builder: (__) {
                 // convert the bufferedLoaded to a percent using the video duration as a 100%
                 double percent = 0;
-                if (_.bufferedLoaded != null &&
-                    _.bufferedLoaded.inSeconds > 0) {
-                  percent = _.bufferedLoaded.inSeconds / _.duration.inSeconds;
+                if (_.bufferedLoaded != null && _.bufferedLoaded.value.inSeconds > 0) {
+                  percent = _.bufferedLoaded.value.inSeconds / _.duration.value.inSeconds;
                 }
                 // draw the  bufferedLoaded as a container
                 return AnimatedContainer(
@@ -33,10 +33,11 @@ class PlayerSlider extends StatelessWidget {
             );
           }),
         ),
-        Obx(
-          () {
-            final int value = _.sliderPosition.inSeconds;
-            final double max = _.duration.inSeconds.toDouble();
+        RxBuilder(
+          observables: [_.sliderPosition, _.duration],
+          builder: (__) {
+            final int value = _.sliderPosition.value.inSeconds;
+            final double max = _.duration.value.inSeconds.toDouble();
             if (value > max || max <= 0) {
               return Container();
             }
@@ -56,7 +57,7 @@ class PlayerSlider extends StatelessWidget {
                 ),
                 child: Slider(
                   min: 0,
-                  divisions: _.duration.inSeconds,
+                  divisions: _.duration.value.inSeconds,
                   value: value.toDouble(),
                   onChangeStart: (v) {
                     _.onChangedSliderStart();
@@ -67,7 +68,7 @@ class PlayerSlider extends StatelessWidget {
                       Duration(seconds: v.floor()),
                     );
                   },
-                  label: printDuration(_.sliderPosition),
+                  label: printDuration(_.sliderPosition.value),
                   max: max,
                   onChanged: _.onChangedSlider,
                 ),
@@ -91,8 +92,7 @@ class MSliderTrackShape extends RoundedRectSliderTrackShape {
   }) {
     final double trackHeight = 1;
     final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2 + 4;
+    final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2 + 4;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }

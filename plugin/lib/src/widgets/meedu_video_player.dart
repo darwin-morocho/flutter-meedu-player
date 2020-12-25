@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/controller.dart';
 import 'package:meedu_player/src/helpers/responsive.dart';
@@ -105,8 +105,9 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
         color: Colors.black,
         width: 0.0,
         height: 0.0,
-        child: Obx(
-          () => _getView(widget.controller),
+        child: RxBuilder(
+          observables: [widget.controller.showControls, widget.controller.dataStatus.status],
+          builder: (__) => _getView(widget.controller),
         ),
       ),
       controller: widget.controller,

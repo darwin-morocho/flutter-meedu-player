@@ -1,9 +1,9 @@
-import 'package:get/state_manager.dart';
+import 'package:meedu/rx.dart';
 
 enum DataStatus { none, loading, loaded, error }
 
 class MeeduPlayerDataStatus {
-  Rx<DataStatus> status = DataStatus.none.obs;
+  Rx<DataStatus> status = Rx(DataStatus.none);
 
   bool get none => status.value == DataStatus.none;
   bool get loading => status.value == DataStatus.loading;

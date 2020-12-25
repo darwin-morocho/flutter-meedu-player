@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:flutter_meedu/rx.dart';
 import 'package:meedu_player/meedu_player.dart';
 
 import 'player_button.dart';
@@ -11,12 +11,13 @@ class FullscreenButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
-    return Obx(
-      () {
+    return RxBuilder(
+      observables: [_.fullscreen],
+      builder: (__) {
         String iconPath = 'assets/icons/minimize.png';
         Widget customIcon = _.customIcons.minimize;
 
-        if (!_.fullscreen) {
+        if (!_.fullscreen.value) {
           iconPath = 'assets/icons/fullscreen.png';
           customIcon = _.customIcons.fullscreen;
         }
@@ -28,7 +29,7 @@ class FullscreenButton extends StatelessWidget {
           iconPath: iconPath,
           customIcon: customIcon,
           onPressed: () {
-            if (_.fullscreen) {
+            if (_.fullscreen.value) {
               // exit to fullscreen
               Navigator.pop(context);
             } else {

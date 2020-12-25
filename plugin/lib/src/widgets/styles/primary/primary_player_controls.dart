@@ -9,8 +9,7 @@ import '../../player_button.dart';
 
 class PrimaryVideoPlayerControls extends StatelessWidget {
   final Responsive responsive;
-  const PrimaryVideoPlayerControls({Key key, @required this.responsive})
-      : super(key: key);
+  const PrimaryVideoPlayerControls({Key key, @required this.responsive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
               if (_.enabledButtons.rewindAndfastForward) ...[
                 PlayerButton(
                   onPressed: _.rewind,
-                  size: responsive.ip(_.fullscreen ? 8 : 12),
+                  size: responsive.ip(_.fullscreen.value ? 8 : 12),
                   iconColor: Colors.white,
                   backgrounColor: Colors.transparent,
                   iconPath: 'assets/icons/rewind.png',
@@ -45,7 +44,7 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
               ],
               if (_.enabledButtons.playPauseAndRepeat)
                 PlayPauseButton(
-                  size: responsive.ip(_.fullscreen ? 10 : 15),
+                  size: responsive.ip(_.fullscreen.value ? 10 : 15),
                 ),
               if (_.enabledButtons.rewindAndfastForward) ...[
                 SizedBox(width: 10),
@@ -53,7 +52,7 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
                   onPressed: _.fastForward,
                   iconColor: Colors.white,
                   backgrounColor: Colors.transparent,
-                  size: responsive.ip(_.fullscreen ? 8 : 12),
+                  size: responsive.ip(_.fullscreen.value ? 8 : 12),
                   iconPath: 'assets/icons/fast-forward.png',
                   customIcon: _.customIcons.fastForward,
                 ),
