@@ -239,14 +239,12 @@ class MeeduPlayerController {
 
     // set the video buffered loaded
     final buffered = value.buffered;
-    print("value.buffered ${value.buffered.length}");
+
     if (buffered.isNotEmpty) {
       _buffered.value = buffered;
       isBuffering.value =
           value.isPlaying && position.inSeconds >= buffered.last.end.inSeconds;
     }
-
-    print("🤩  ${isBuffering.value}");
 
     // save the volume value
     final volume = value.volume;

@@ -1,3 +1,5 @@
+## [0.4.1+1]
+- Removed logs.
 ## [0.4.1]
 - Added loading view while the video is playing.
 - Removed GetX.
