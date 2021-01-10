@@ -78,10 +78,20 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
         return Stack(
           alignment: Alignment.center,
           children: [
-            AspectRatio(
-              aspectRatio: _.videoPlayerController.value.aspectRatio,
-              child: VideoPlayer(_.videoPlayerController),
-            ),
+            RxBuilder(
+                observables: [_.videoFit],
+                builder: (__) {
+                  return SizedBox.expand(
+                    child: FittedBox(
+                      fit: widget.controller.videoFit.value,
+                      child: SizedBox(
+                        width: _.videoPlayerController.value.size.width ?? 0,
+                        height: _.videoPlayerController.value.size.height ?? 0,
+                        child: VideoPlayer(_.videoPlayerController),
+                      ),
+                    ),
+                  );
+                }),
             ClosedCaptionView(responsive: responsive),
             if (_.controlsEnabled && _.controlsStyle == ControlsStyle.primary)
               PrimaryVideoPlayerControls(
