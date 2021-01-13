@@ -9,7 +9,7 @@ class ListViewExample extends StatefulWidget {
   _ListViewExampleState createState() => _ListViewExampleState();
 }
 
-class _ListViewExampleState extends State<ListViewExample> {
+class _ListViewExampleState extends State<ListViewExample> with AutomaticKeepAliveClientMixin {
   // final List<MeeduPlayerController> _controllers = [];
 
   // @override
@@ -21,15 +21,25 @@ class _ListViewExampleState extends State<ListViewExample> {
   // }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(),
       body: ListView.builder(
+        cacheExtent: 600,
         itemBuilder: (_, index) => VideoItem(),
         itemCount: 10,
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class VideoItem extends StatefulWidget {
@@ -39,7 +49,7 @@ class VideoItem extends StatefulWidget {
   _VideoItemState createState() => _VideoItemState();
 }
 
-class _VideoItemState extends State<VideoItem> {
+class _VideoItemState extends State<VideoItem> with AutomaticKeepAliveClientMixin {
   MeeduPlayerController _controller = MeeduPlayerController(
     screenManager: ScreenManager(orientations: [
       DeviceOrientation.portraitUp,
@@ -61,11 +71,13 @@ class _VideoItemState extends State<VideoItem> {
   @override
   void dispose() {
     _controller.dispose();
+    print("❌ dispose video player");
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: MeeduVideoPlayer(
@@ -73,4 +85,7 @@ class _VideoItemState extends State<VideoItem> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

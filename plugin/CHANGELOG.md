@@ -1,3 +1,6 @@
+## [0.4.3]
+- Added video fit feature by [Utkarsh Sharma](https://github.com/uttusharma). 
+
 ## [0.4.2]
 - Fixed loading animation autoplay false.
 
