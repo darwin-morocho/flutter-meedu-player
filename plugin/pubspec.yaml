@@ -49,6 +49,7 @@ flutter:
     - assets/icons/rewind.png
     - assets/icons/sound.png
     - assets/icons/picture-in-picture.png
+    - assets/icons/fit.png
   #
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages

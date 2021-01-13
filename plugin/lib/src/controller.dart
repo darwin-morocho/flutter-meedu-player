@@ -59,6 +59,7 @@ class MeeduPlayerController {
   Rx<bool> _fullscreen = false.obs;
   Rx<bool> _showControls = true.obs;
   Rx<bool> _pipAvailable = false.obs;
+  Rx<BoxFit> _videoFit = Rx(BoxFit.contain);
 
   // NO OBSERVABLES
   bool _isSliderMoving = false;
@@ -138,6 +139,9 @@ class MeeduPlayerController {
 
   /// returns true if the pip mode can used on the current device, the initial value will be false after check if pip is available
   Rx<bool> get pipAvailable => _pipAvailable;
+
+  /// return fit of the Video,By default it is set to [BoxFit.contain]
+  Rx<BoxFit> get videoFit => _videoFit;
 
   /// creates an instance of [MeeduPlayerControlle]
   ///
@@ -510,6 +514,17 @@ class MeeduPlayerController {
   /// enable or diable the visibility of ClosedCaptionFile
   void onClosedCaptionEnabled(bool enabled) {
     _closedCaptionEnabled.value = enabled;
+  }
+
+  /// Toggle Change the videofit accordingly
+  void toggleVideoFit() {
+    _videoFit.value =
+        _videoFit.value == BoxFit.contain ? BoxFit.cover : BoxFit.contain;
+  }
+
+  /// Change Video Fit accordingly
+  void onVideoFitChange(BoxFit fit) {
+    _videoFit.value = fit;
   }
 
   /// enter to picture in picture mode only Android

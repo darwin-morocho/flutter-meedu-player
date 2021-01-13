@@ -2,6 +2,7 @@
 class EnabledButtons {
   final bool playPauseAndRepeat,
       rewindAndfastForward,
+      videoFit,
       muteAndSound,
       pip,
       fullscreen;
@@ -9,6 +10,7 @@ class EnabledButtons {
   const EnabledButtons({
     this.playPauseAndRepeat = true,
     this.rewindAndfastForward = true,
+    this.videoFit = true,
     this.muteAndSound = true,
     this.pip = true,
     this.fullscreen = true,
