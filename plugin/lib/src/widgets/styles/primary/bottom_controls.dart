@@ -7,6 +7,7 @@ import 'package:meedu_player/src/widgets/fullscreen_button.dart';
 import 'package:meedu_player/src/widgets/mute_sound_button.dart';
 import 'package:meedu_player/src/widgets/pip_button.dart';
 import 'package:meedu_player/src/widgets/player_slider.dart';
+import 'package:meedu_player/src/widgets/video_fit_button.dart';
 
 class PrimaryBottomControls extends StatelessWidget {
   final Responsive responsive;
@@ -60,6 +61,8 @@ class PrimaryBottomControls extends StatelessWidget {
 
           if (_.enabledButtons.pip) PipButton(responsive: responsive),
 
+          if (_.enabledButtons.muteAndSound)
+            VideoFitButton(responsive: responsive),
           if (_.enabledButtons.muteAndSound)
             MuteSoundButton(responsive: responsive),
 

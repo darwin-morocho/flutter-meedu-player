@@ -9,6 +9,7 @@ class CustomIcons {
       fastForward,
       sound,
       mute,
+      videoFit,
       pip,
       minimize,
       fullscreen;
@@ -21,6 +22,7 @@ class CustomIcons {
     this.fastForward,
     this.sound,
     this.mute,
+    this.videoFit,
     this.pip,
     this.minimize,
     this.fullscreen,
