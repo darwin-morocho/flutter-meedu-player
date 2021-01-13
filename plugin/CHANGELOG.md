@@ -1,3 +1,6 @@
+## [0.4.2]
+- Fixed loading animation autoplay false.
+
 ## [0.4.1+1]
 - Removed logs.
 ## [0.4.1]

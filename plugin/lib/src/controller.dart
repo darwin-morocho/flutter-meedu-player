@@ -129,7 +129,7 @@ class MeeduPlayerController {
   Rx<bool> get isInPipMode => _pipManager.isInPipMode;
   Stream<bool> get onPipModeChanged => _pipManager.isInPipMode.stream;
 
-  Rx<bool> isBuffering = true.obs;
+  Rx<bool> isBuffering = false.obs;
 
   /// returns the os version
   Future<double> get osVersion async {
