@@ -5,6 +5,7 @@ import 'package:player_example/pages/change_quality_example_page.dart';
 import 'package:player_example/pages/custom_icons_example.dart';
 import 'package:player_example/pages/disabled_buttons_example_page.dart';
 import 'package:player_example/pages/fullscreen_example_page.dart';
+import 'package:player_example/pages/listview_example.dart';
 import 'package:player_example/pages/network_with_subtitle_page.dart';
 import 'package:player_example/pages/one_page_to_other_page_example.dart';
 import 'package:player_example/pages/pick_file_page_example.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         "pick-file": (_) => PickFileExamplePage(),
         "custom-icons": (_) => CustomIconsExamplePage(),
         "disabled-buttons": (_) => DisabledButtonsExample(),
+        "listview": (_) => ListViewExample(),
       },
     );
   }
@@ -47,8 +49,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   @override
@@ -115,6 +116,12 @@ class _HomePageState extends State<HomePage> {
               Navigator.pushNamed(context, 'disabled-buttons');
             },
             child: Text("Disabled Buttons"),
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.pushNamed(context, 'listview');
+            },
+            child: Text("ListView"),
           )
         ],
       ),

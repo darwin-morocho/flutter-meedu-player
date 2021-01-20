@@ -61,8 +61,7 @@ class PrimaryBottomControls extends StatelessWidget {
 
           if (_.enabledButtons.pip) PipButton(responsive: responsive),
 
-          if (_.enabledButtons.muteAndSound)
-            VideoFitButton(responsive: responsive),
+          if (_.enabledButtons.videoFit) VideoFitButton(responsive: responsive),
           if (_.enabledButtons.muteAndSound)
             MuteSoundButton(responsive: responsive),
 
