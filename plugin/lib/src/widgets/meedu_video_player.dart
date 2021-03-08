@@ -114,7 +114,10 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
         width: 0.0,
         height: 0.0,
         child: RxBuilder(
-          observables: [widget.controller.showControls, widget.controller.dataStatus.status],
+          observables: [
+            widget.controller.showControls,
+            widget.controller.dataStatus.status
+          ],
           builder: (__) => _getView(widget.controller),
         ),
       ),

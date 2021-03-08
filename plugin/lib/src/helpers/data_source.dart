@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:video_player/video_player.dart' show VideoFormat, DataSourceType, ClosedCaptionFile;
+import 'package:video_player/video_player.dart'
+    show VideoFormat, DataSourceType, ClosedCaptionFile;
 
 class DataSource {
   final File? file;
