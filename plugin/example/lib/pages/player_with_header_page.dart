@@ -4,7 +4,7 @@ import 'package:meedu_player/meedu_player.dart';
 import 'package:wakelock/wakelock.dart';
 
 class PlayerWithHeaderPage extends StatefulWidget {
-  PlayerWithHeaderPage({Key key}) : super(key: key);
+  PlayerWithHeaderPage({Key? key}) : super(key: key);
 
   @override
   _PlayerWithHeaderPageState createState() => _PlayerWithHeaderPageState();
@@ -21,7 +21,7 @@ class _PlayerWithHeaderPageState extends State<PlayerWithHeaderPage> {
 
 // The following line will enable the Android and iOS wakelock.
     Wakelock.enable();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
   }
@@ -38,8 +38,7 @@ class _PlayerWithHeaderPageState extends State<PlayerWithHeaderPage> {
     _meeduPlayerController.setDataSource(
       DataSource(
         type: DataSourceType.network,
-        source:
-            "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
+        source: "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
       ),
       autoplay: true,
     );

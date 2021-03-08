@@ -7,17 +7,16 @@ import 'package:meedu_player/meedu_player.dart';
 class Quality {
   final String url, label;
   Quality({
-    @required this.url,
-    @required this.label,
+    required this.url,
+    required this.label,
   });
 }
 
 class ChangeQualityExamplePage extends StatefulWidget {
-  ChangeQualityExamplePage({Key key}) : super(key: key);
+  ChangeQualityExamplePage({Key? key}) : super(key: key);
 
   @override
-  _ChangeQualityExamplePageState createState() =>
-      _ChangeQualityExamplePageState();
+  _ChangeQualityExamplePageState createState() => _ChangeQualityExamplePageState();
 }
 
 class _ChangeQualityExamplePageState extends State<ChangeQualityExamplePage> {
@@ -46,12 +45,12 @@ class _ChangeQualityExamplePageState extends State<ChangeQualityExamplePage> {
   ];
 
   /// listener for the video quality
-  ValueNotifier<Quality> _quality = ValueNotifier(null);
+  ValueNotifier<Quality?> _quality = ValueNotifier(null);
 
   Duration _currentPosition = Duration.zero; // to save the video position
 
   /// subscription to listen the video position changes
-  StreamSubscription _currentPositionSubs;
+  StreamSubscription? _currentPositionSubs;
 
   @override
   void initState() {
@@ -64,7 +63,7 @@ class _ChangeQualityExamplePageState extends State<ChangeQualityExamplePage> {
         _currentPosition = position; // save the video position
       },
     );
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _setDataSource();
     });
   }
@@ -108,7 +107,7 @@ class _ChangeQualityExamplePageState extends State<ChangeQualityExamplePage> {
     await _controller.setDataSource(
       DataSource(
         type: DataSourceType.network,
-        source: _quality.value.url,
+        source: _quality.value!.url,
       ),
       autoplay: true,
       seekTo: _currentPosition,
@@ -130,11 +129,11 @@ class _ChangeQualityExamplePageState extends State<ChangeQualityExamplePage> {
             return CupertinoButton(
               padding: EdgeInsets.all(5),
               minSize: 25,
-              child: ValueListenableBuilder<Quality>(
+              child: ValueListenableBuilder<Quality?>(
                 valueListenable: this._quality,
-                builder: (context, Quality quality, child) {
+                builder: (context, Quality? quality, child) {
                   return Text(
-                    "${quality.label}",
+                    "${quality!.label}",
                     style: TextStyle(
                       fontSize: fontSize > 18 ? 18 : fontSize,
                       color: Colors.white,

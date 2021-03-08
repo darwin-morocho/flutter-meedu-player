@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:player_example/pages/basic_example_page.dart';
 import 'package:player_example/pages/change_quality_example_page.dart';
 import 'package:player_example/pages/custom_icons_example.dart';
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -57,67 +56,67 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: ListView(
         children: [
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'basic');
             },
             child: Text("Basic Network example"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'fullscreen');
             },
             child: Text("Fullscreen example"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'with-header');
             },
             child: Text("With header example"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'subtitles');
             },
             child: Text("With subtitles example"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'playback-speed');
             },
             child: Text("Playback speed example"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'quality-change');
             },
             child: Text("Quality Change example"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'one-page-to-other');
             },
             child: Text("One Page to other"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'pick-file');
             },
             child: Text("Pick file"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'custom-icons');
             },
             child: Text("Custom Icons"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'disabled-buttons');
             },
             child: Text("Disabled Buttons"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.pushNamed(context, 'listview');
             },

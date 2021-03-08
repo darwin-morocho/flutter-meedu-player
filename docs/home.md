@@ -169,7 +169,7 @@ import 'package:meedu_player/meedu_player.dart';
 import 'package:wakelock/wakelock.dart';
 
 class BasicExamplePage extends StatefulWidget {
-  BasicExamplePage({Key key}) : super(key: key);
+  BasicExamplePage({Key? key}) : super(key: key);
 
   @override
   _BasicExamplePageState createState() => _BasicExamplePageState();
@@ -187,7 +187,7 @@ class _BasicExamplePageState extends State<BasicExamplePage> {
     Wakelock.enable();
 
     // Wait until the fisrt render the avoid posible errors when use an context while the view is rendering
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
   }

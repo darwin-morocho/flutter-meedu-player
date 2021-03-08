@@ -6,8 +6,7 @@ import 'package:meedu_player/src/helpers/responsive.dart';
 
 class ClosedCaptionView extends StatelessWidget {
   final Responsive responsive;
-  const ClosedCaptionView({Key key, @required this.responsive})
-      : super(key: key);
+  const ClosedCaptionView({Key? key, required this.responsive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +24,7 @@ class ClosedCaptionView extends StatelessWidget {
                 return Container();
               }
 
-              final strSubtitle = _.videoPlayerController.value.caption.text;
-              if (strSubtitle == null) return Container();
+              final strSubtitle = _.videoPlayerController!.value.caption.text;
 
               return Positioned(
                 left: 60,

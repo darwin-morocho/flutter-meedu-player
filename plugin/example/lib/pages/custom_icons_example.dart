@@ -5,7 +5,7 @@ import 'package:meedu_player/meedu_player.dart';
 import 'package:wakelock/wakelock.dart';
 
 class CustomIconsExamplePage extends StatefulWidget {
-  CustomIconsExamplePage({Key key}) : super(key: key);
+  CustomIconsExamplePage({Key? key}) : super(key: key);
 
   @override
   _CustomIconsExamplePageState createState() => _CustomIconsExamplePageState();
@@ -20,7 +20,7 @@ class _CustomIconsExamplePageState extends State<CustomIconsExamplePage> {
     showPipButton: true, // use false to hide pip button in the player
   );
 
-  StreamSubscription _playerEventSubs;
+  StreamSubscription? _playerEventSubs;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _CustomIconsExamplePageState extends State<CustomIconsExamplePage> {
       },
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
   }

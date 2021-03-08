@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:meedu_player/meedu_player.dart';
 
 class PlayBackSpeedExamplePage extends StatefulWidget {
-  PlayBackSpeedExamplePage({Key key}) : super(key: key);
+  PlayBackSpeedExamplePage({Key? key}) : super(key: key);
 
   @override
-  _PlayBackSpeedExamplePageState createState() =>
-      _PlayBackSpeedExamplePageState();
+  _PlayBackSpeedExamplePageState createState() => _PlayBackSpeedExamplePageState();
 }
 
 class _PlayBackSpeedExamplePageState extends State<PlayBackSpeedExamplePage> {
@@ -51,7 +50,7 @@ class _PlayBackSpeedExamplePageState extends State<PlayBackSpeedExamplePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
   }
@@ -66,8 +65,7 @@ class _PlayBackSpeedExamplePageState extends State<PlayBackSpeedExamplePage> {
     _controller.setDataSource(
       DataSource(
         type: DataSourceType.network,
-        source:
-            "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
+        source: "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
       ),
       autoplay: true,
     );

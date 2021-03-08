@@ -12,19 +12,19 @@ class OnePageExample extends StatefulWidget {
 class _OnePageExampleState extends State<OnePageExample> {
   // read the documentation https://the-meedu-app.github.io/flutter-meedu-player/#/picture-in-picture
   // to enable the pip (picture in picture) support on Android
-  MeeduPlayerController _meeduPlayerController = MeeduPlayerController(
+  MeeduPlayerController? _meeduPlayerController = MeeduPlayerController(
     controlsStyle: ControlsStyle.secondary,
     pipEnabled: true, // enable  pip on android
     showPipButton: true, // use false to hide pip button in the player
   );
 
-  StreamSubscription _playerEventSubs;
+  StreamSubscription? _playerEventSubs;
 
   @override
   void initState() {
     super.initState();
     // The following line will enable the Android and iOS wakelock.
-    _playerEventSubs = _meeduPlayerController.onPlayerStatusChanged.listen(
+    _playerEventSubs = _meeduPlayerController!.onPlayerStatusChanged.listen(
       (PlayerStatus status) {
         if (status == PlayerStatus.playing) {
           Wakelock.enable();
@@ -34,7 +34,7 @@ class _OnePageExampleState extends State<OnePageExample> {
       },
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
   }
@@ -48,7 +48,7 @@ class _OnePageExampleState extends State<OnePageExample> {
   Future<void> _meeduDispose() async {
     if (_meeduPlayerController != null) {
       _playerEventSubs?.cancel();
-      await _meeduPlayerController.dispose();
+      await _meeduPlayerController!.dispose();
       _meeduPlayerController = null;
       // The next line disables the wakelock again.
       await Wakelock.disable();
@@ -56,7 +56,7 @@ class _OnePageExampleState extends State<OnePageExample> {
   }
 
   _init() {
-    _meeduPlayerController.setDataSource(
+    _meeduPlayerController!.setDataSource(
       DataSource(
         type: DataSourceType.network,
         source: "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
@@ -84,11 +84,11 @@ class _OnePageExampleState extends State<OnePageExample> {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: MeeduVideoPlayer(
-                controller: _meeduPlayerController,
+                controller: _meeduPlayerController!,
               ),
             ),
             SizedBox(height: 2),
-            FlatButton(
+            TextButton(
               onPressed: this._gotTo,
               child: Text("Page 2"),
             ),
@@ -100,7 +100,7 @@ class _OnePageExampleState extends State<OnePageExample> {
 }
 
 class PageTwo extends StatefulWidget {
-  PageTwo({Key key}) : super(key: key);
+  PageTwo({Key? key}) : super(key: key);
 
   @override
   _PageTwoState createState() => _PageTwoState();
@@ -115,7 +115,7 @@ class _PageTwoState extends State<PageTwo> {
     showPipButton: true, // use false to hide pip button in the player
   );
 
-  StreamSubscription _playerEventSubs;
+  StreamSubscription? _playerEventSubs;
 
   @override
   void initState() {
@@ -131,7 +131,7 @@ class _PageTwoState extends State<PageTwo> {
       },
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
   }

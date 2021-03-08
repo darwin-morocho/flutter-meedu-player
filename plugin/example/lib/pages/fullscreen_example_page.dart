@@ -13,7 +13,7 @@ const videos = [
 ];
 
 class FullscreenExamplePage extends StatefulWidget {
-  FullscreenExamplePage({Key key}) : super(key: key);
+  FullscreenExamplePage({Key? key}) : super(key: key);
 
   @override
   _FullscreenExamplePageState createState() => _FullscreenExamplePageState();
@@ -36,9 +36,9 @@ class _FullscreenExamplePageState extends State<FullscreenExamplePage> {
     colorTheme: Colors.blue,
   );
   ValueNotifier<int> currentIndex = ValueNotifier(0);
-  DataSource _dataSource;
+  DataSource? _dataSource;
 
-  StreamSubscription _subscription;
+  StreamSubscription? _subscription;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _FullscreenExamplePageState extends State<FullscreenExamplePage> {
       valueListenable: currentIndex,
       builder: (_, int index, __) {
         final hasNext = index < videos.length - 1;
-        return FlatButton(
+        return TextButton(
           onPressed: hasNext
               ? () {
                   currentIndex.value++;
@@ -128,7 +128,7 @@ class _FullscreenExamplePageState extends State<FullscreenExamplePage> {
       // launch the player in fullscreen mode
       await this._meeduPlayerController.launchAsFullscreen(
             context,
-            dataSource: _dataSource,
+            dataSource: _dataSource!,
             autoplay: true,
             header: header,
             bottomRight: nextButton,
@@ -136,7 +136,7 @@ class _FullscreenExamplePageState extends State<FullscreenExamplePage> {
     } else {
       // update the player with new datasource and it doesn't re-launch the player
       await this._meeduPlayerController.setDataSource(
-            _dataSource.copyWith(
+            _dataSource!.copyWith(
               source: videos[index],
             ),
             seekTo: Duration.zero,

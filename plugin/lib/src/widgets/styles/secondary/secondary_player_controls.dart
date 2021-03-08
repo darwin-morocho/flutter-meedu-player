@@ -7,7 +7,7 @@ import 'package:meedu_player/src/widgets/styles/secondary/secondary_bottom_contr
 
 class SecondaryVideoPlayerControls extends StatelessWidget {
   final Responsive responsive;
-  const SecondaryVideoPlayerControls({Key key, @required this.responsive})
+  const SecondaryVideoPlayerControls({Key? key, required this.responsive})
       : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class SecondaryVideoPlayerControls extends StatelessWidget {
           // RENDER A CUSTOM HEADER
           if (_.header != null)
             Positioned(
-              child: _.header,
+              child: _.header!,
               left: 0,
               right: 0,
               top: 0,

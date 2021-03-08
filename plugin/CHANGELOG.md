@@ -1,3 +1,5 @@
+## [0.5.0-nullsafety.0]
+- Added support for flutter 2 and null safety.
 ## [0.4.3]
 - Added video fit feature by [Utkarsh Sharma](https://github.com/uttusharma). 
 

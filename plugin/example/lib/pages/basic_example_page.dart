@@ -5,7 +5,7 @@ import 'package:meedu_player/meedu_player.dart';
 import 'package:wakelock/wakelock.dart';
 
 class BasicExamplePage extends StatefulWidget {
-  BasicExamplePage({Key key}) : super(key: key);
+  BasicExamplePage({Key? key}) : super(key: key);
 
   @override
   _BasicExamplePageState createState() => _BasicExamplePageState();
@@ -20,7 +20,7 @@ class _BasicExamplePageState extends State<BasicExamplePage> {
     showPipButton: true, // use false to hide pip button in the player
   );
 
-  StreamSubscription _playerEventSubs;
+  StreamSubscription? _playerEventSubs;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _BasicExamplePageState extends State<BasicExamplePage> {
       },
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
   }
@@ -54,8 +54,7 @@ class _BasicExamplePageState extends State<BasicExamplePage> {
     _meeduPlayerController.setDataSource(
       DataSource(
         type: DataSourceType.network,
-        source:
-            "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
+        source: "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4",
       ),
       autoplay: true,
     );

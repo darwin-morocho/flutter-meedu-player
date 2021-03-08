@@ -5,7 +5,7 @@ import 'package:meedu_player/meedu_player.dart';
 import 'package:wakelock/wakelock.dart';
 
 class DisabledButtonsExample extends StatefulWidget {
-  DisabledButtonsExample({Key key}) : super(key: key);
+  DisabledButtonsExample({Key? key}) : super(key: key);
 
   @override
   _DisabledButtonsExampleState createState() => _DisabledButtonsExampleState();
@@ -24,7 +24,7 @@ class _DisabledButtonsExampleState extends State<DisabledButtonsExample> {
     ),
   );
 
-  StreamSubscription _playerEventSubs;
+  StreamSubscription? _playerEventSubs;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _DisabledButtonsExampleState extends State<DisabledButtonsExample> {
       },
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _init();
     });
   }

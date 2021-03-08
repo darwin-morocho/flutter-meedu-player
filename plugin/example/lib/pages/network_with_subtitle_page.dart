@@ -8,7 +8,7 @@ class NetworkWithSubtitlesPage extends StatefulWidget {
 }
 
 class _NetworkWithSubtitlesPageState extends State<NetworkWithSubtitlesPage> {
-  MeeduPlayerController _controller;
+  late MeeduPlayerController _controller;
 
   ValueNotifier<bool> _subtitlesEnabled = ValueNotifier(true);
 
@@ -23,7 +23,7 @@ class _NetworkWithSubtitlesPageState extends State<NetworkWithSubtitlesPage> {
 
   @override
   void dispose() {
-    this._controller?.dispose();
+    this._controller.dispose();
     super.dispose();
   }
 
@@ -119,7 +119,7 @@ Great
                 minSize: 25,
                 child: ValueListenableBuilder(
                   valueListenable: this._subtitlesEnabled,
-                  builder: (BuildContext context, bool enabled, Widget child) {
+                  builder: (BuildContext context, bool enabled, _) {
                     return Text(
                       "CC",
                       style: TextStyle(

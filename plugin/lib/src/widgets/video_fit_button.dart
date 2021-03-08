@@ -7,7 +7,7 @@ import 'player_button.dart';
 
 class VideoFitButton extends StatelessWidget {
   final Responsive responsive;
-  const VideoFitButton({Key key, @required this.responsive}) : super(key: key);
+  const VideoFitButton({Key? key, required this.responsive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class VideoFitButton extends StatelessWidget {
         observables: [_.fullscreen],
         builder: (__) {
           String iconPath = 'assets/icons/fit.png';
-          Widget customIcon = _.customIcons.videoFit;
+          Widget? customIcon = _.customIcons.videoFit;
 
           return PlayerButton(
             size: responsive.ip(_.fullscreen.value ? 5 : 7),

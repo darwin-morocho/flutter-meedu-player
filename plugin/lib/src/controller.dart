@@ -18,7 +18,7 @@ enum ControlsStyle { primary, secondary }
 
 class MeeduPlayerController {
   /// the video_player controller
-  VideoPlayerController _videoPlayerController;
+  VideoPlayerController? _videoPlayerController;
   final _pipManager = PipManager();
 
   /// Screen Manager to define the overlays and device orientation when the player enters in fullscreen mode
@@ -39,14 +39,14 @@ class MeeduPlayerController {
   final MeeduPlayerDataStatus dataStatus = MeeduPlayerDataStatus();
   final Color colorTheme;
   final bool controlsEnabled;
-  String _errorText;
-  String get errorText => _errorText;
-  Widget loadingWidget, header, bottomRight;
+  String? _errorText;
+  String? get errorText => _errorText;
+  Widget? loadingWidget, header, bottomRight;
   final ControlsStyle controlsStyle;
   final bool pipEnabled, showPipButton;
-  BuildContext _pipContextToFullscreen;
+  BuildContext? _pipContextToFullscreen;
 
-  String tag;
+  String? tag;
 
   // OBSERVABLES
   Rx<Duration> _position = Rx(Duration.zero);
@@ -67,8 +67,8 @@ class MeeduPlayerController {
   bool _autoplay = false;
   double _volumeBeforeMute = 0;
   double _playbackSpeed = 1.0;
-  Timer _timer;
-  RxWorker _pipModeWorker;
+  Timer? _timer;
+  RxWorker? _pipModeWorker;
 
   // GETS
 
@@ -111,7 +111,7 @@ class MeeduPlayerController {
   Stream<List<DurationRange>> get onBufferedChanged => _buffered.stream;
 
   /// [videoPlayerController] instace of VideoPlayerController
-  VideoPlayerController get videoPlayerController => _videoPlayerController;
+  VideoPlayerController? get videoPlayerController => _videoPlayerController;
 
   /// the playback speed default value is 1.0
   double get playbackSpeed => _playbackSpeed;
@@ -123,12 +123,11 @@ class MeeduPlayerController {
   bool get autoplay => _autoplay;
 
   Rx<bool> get closedCaptionEnabled => _closedCaptionEnabled;
-  Stream<bool> get onClosedCaptionEnabledChanged =>
-      _closedCaptionEnabled.stream;
+  Stream<bool> get onClosedCaptionEnabledChanged => _closedCaptionEnabled.stream;
 
   /// [isInPipMode] is true if pip mode is enabled
   Rx<bool> get isInPipMode => _pipManager.isInPipMode;
-  Stream<bool> get onPipModeChanged => _pipManager.isInPipMode.stream;
+  Stream<bool?> get onPipModeChanged => _pipManager.isInPipMode.stream;
 
   Rx<bool> isBuffering = false.obs;
 
@@ -152,9 +151,9 @@ class MeeduPlayerController {
   MeeduPlayerController({
     this.screenManager = const ScreenManager(),
     this.colorTheme = Colors.redAccent,
-    Widget loadingWidget,
+    Widget? loadingWidget,
     this.controlsEnabled = true,
-    String errorText,
+    String? errorText,
     this.controlsStyle = ControlsStyle.primary,
     this.header,
     this.bottomRight,
@@ -188,19 +187,19 @@ class MeeduPlayerController {
     VideoPlayerController tmp; // create a new video controller
     if (dataSource.type == DataSourceType.asset) {
       tmp = new VideoPlayerController.asset(
-        dataSource.source,
+        dataSource.source!,
         closedCaptionFile: dataSource.closedCaptionFile,
         package: dataSource.package,
       );
     } else if (dataSource.type == DataSourceType.network) {
       tmp = new VideoPlayerController.network(
-        dataSource.source,
+        dataSource.source!,
         formatHint: dataSource.formatHint,
         closedCaptionFile: dataSource.closedCaptionFile,
       );
     } else {
       tmp = new VideoPlayerController.file(
-        dataSource.file,
+        dataSource.file!,
         closedCaptionFile: dataSource.closedCaptionFile,
       );
     }
@@ -209,9 +208,9 @@ class MeeduPlayerController {
 
   /// initialize the video_player controller and load the data source
   Future _initializePlayer({
-    Duration seekTo,
+    Duration? seekTo,
   }) async {
-    await _videoPlayerController.initialize();
+    await _videoPlayerController!.initialize();
 
     if (seekTo != null) {
       await this.seekTo(seekTo);
@@ -233,7 +232,7 @@ class MeeduPlayerController {
   }
 
   void _listener() {
-    final value = _videoPlayerController.value;
+    final value = _videoPlayerController!.value;
     // set the current video position
     final position = value.position;
     _position.value = position;
@@ -246,8 +245,7 @@ class MeeduPlayerController {
 
     if (buffered.isNotEmpty) {
       _buffered.value = buffered;
-      isBuffering.value =
-          value.isPlaying && position.inSeconds >= buffered.last.end.inSeconds;
+      isBuffering.value = value.isPlaying && position.inSeconds >= buffered.last.end.inSeconds;
     }
 
     // save the volume value
@@ -257,8 +255,7 @@ class MeeduPlayerController {
     }
 
     // check if the player has been finished
-    if (_position.value.inSeconds >= duration.value.inSeconds &&
-        !playerStatus.stopped) {
+    if (_position.value.inSeconds >= duration.value.inSeconds && !playerStatus.stopped) {
       playerStatus.status.value = PlayerStatus.stopped;
     }
   }
@@ -268,32 +265,30 @@ class MeeduPlayerController {
   /// [autoPlay] if this is true the video automatically start
   Future<void> setDataSource(
     DataSource dataSource, {
-    bool autoplay,
-    bool looping,
-    Duration seekTo,
+    bool autoplay = true,
+    bool looping = false,
+    Duration? seekTo,
   }) async {
     try {
-      _autoplay = autoplay ?? this._autoplay;
-      _looping = looping ?? this._looping;
+      _autoplay = autoplay;
+      _looping = looping;
       dataStatus.status.value = DataStatus.loading;
 
       // if we are playing a video
-      if (_videoPlayerController != null &&
-          _videoPlayerController.value.isPlaying) {
+      if (_videoPlayerController != null && _videoPlayerController!.value.isPlaying) {
         await this.pause(notify: false);
       }
 
       // save the current video controller to be disposed in the next frame
-      VideoPlayerController oldController = _videoPlayerController;
+      VideoPlayerController? oldController = _videoPlayerController;
 
       // create a new video_player controller using the dataSource
       _videoPlayerController = _createVideoController(dataSource);
       await _initializePlayer(seekTo: seekTo);
       if (oldController != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          oldController?.removeListener(this._listener);
-          await oldController
-              ?.dispose(); // dispose the previous video controller
+        WidgetsBinding.instance!.addPostFrameCallback((_) async {
+          oldController.removeListener(this._listener);
+          await oldController.dispose(); // dispose the previous video controller
         });
       }
 
@@ -301,15 +296,15 @@ class MeeduPlayerController {
       dataStatus.status.value = DataStatus.loaded;
 
       // set the video duration
-      _duration.value = _videoPlayerController.value.duration;
+      _duration.value = _videoPlayerController!.value.duration;
 
       // listen the video player events
-      _videoPlayerController.addListener(this._listener);
+      _videoPlayerController!.addListener(this._listener);
     } catch (e, s) {
       print(e);
       print(s);
       if (_errorText == null) {
-        _errorText = _videoPlayerController.value.errorDescription;
+        _errorText = _videoPlayerController!.value.errorDescription;
       }
       dataStatus.status.value = DataStatus.error;
     }
@@ -378,7 +373,7 @@ class MeeduPlayerController {
   /// linear scale.
   Future<void> setVolume(double volume) async {
     assert(volume >= 0.0 && volume <= 1.0); // validate the param
-    _volumeBeforeMute = _videoPlayerController.value.volume;
+    _volumeBeforeMute = _videoPlayerController!.value.volume;
     await _videoPlayerController?.setVolume(volume);
   }
 
@@ -399,7 +394,7 @@ class MeeduPlayerController {
   /// [enabled] if is true the video player is muted
   Future<void> setMute(bool enabled) async {
     if (enabled) {
-      _volumeBeforeMute = _videoPlayerController.value.volume;
+      _volumeBeforeMute = _videoPlayerController!.value.volume;
     }
     _mute.value = enabled;
     await this.setVolume(enabled ? 0 : _volumeBeforeMute);
@@ -422,9 +417,7 @@ class MeeduPlayerController {
   /// show or hide the player controls
   set controls(bool visible) {
     _showControls.value = visible;
-    if (_timer != null) {
-      _timer.cancel();
-    }
+    _timer?.cancel();
     if (visible) {
       _hideTaskControls();
     }
@@ -463,12 +456,12 @@ class MeeduPlayerController {
   /// [looping]
   Future<void> launchAsFullscreen(
     BuildContext context, {
-    @required DataSource dataSource,
+    required DataSource dataSource,
     bool autoplay = false,
     bool looping = false,
-    Widget header,
-    Widget bottomRight,
-    Duration seekTo,
+    Widget? header,
+    Widget? bottomRight,
+    Duration? seekTo,
   }) async {
     this.header = header;
     this.bottomRight = bottomRight;
@@ -479,7 +472,7 @@ class MeeduPlayerController {
       seekTo: seekTo,
     );
     await goToFullscreen(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       _position.value = Duration.zero;
       _timer?.cancel();
       await pause();
@@ -518,8 +511,7 @@ class MeeduPlayerController {
 
   /// Toggle Change the videofit accordingly
   void toggleVideoFit() {
-    _videoFit.value =
-        _videoFit.value == BoxFit.contain ? BoxFit.cover : BoxFit.contain;
+    _videoFit.value = _videoFit.value == BoxFit.contain ? BoxFit.cover : BoxFit.contain;
   }
 
   /// Change Video Fit accordingly
@@ -546,14 +538,12 @@ class MeeduPlayerController {
   void _onPipModeChanged(bool isInPipMode) {
     // if the pip mode was closed and before enter to pip mode the player was not in fullscreen
     if (!isInPipMode && _pipContextToFullscreen != null) {
-      Navigator.pop(_pipContextToFullscreen); // close the fullscreen
+      Navigator.pop(_pipContextToFullscreen!); // close the fullscreen
       _pipContextToFullscreen = null;
     }
   }
 
   static MeeduPlayerController of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>()
-        .controller;
+    return context.dependOnInheritedWidgetOfExactType<MeeduPlayerProvider>()!.controller;
   }
 }

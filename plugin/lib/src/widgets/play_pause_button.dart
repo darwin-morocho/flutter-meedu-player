@@ -7,7 +7,7 @@ import 'player_button.dart';
 
 class PlayPauseButton extends StatelessWidget {
   final double size;
-  const PlayPauseButton({Key key, this.size = 40}) : super(key: key);
+  const PlayPauseButton({Key? key, this.size = 40}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +21,11 @@ class PlayPauseButton extends StatelessWidget {
       ],
       builder: (__) {
         if (_.isBuffering.value) {
-          return CupertinoButton(child: _.loadingWidget, onPressed: _.pause);
+          return CupertinoButton(child: _.loadingWidget!, onPressed: _.pause);
         }
 
         String iconPath = 'assets/icons/repeat.png';
-        Widget customIcon = _.customIcons.repeat;
+        Widget? customIcon = _.customIcons.repeat;
         if (_.playerStatus.playing) {
           iconPath = 'assets/icons/pause.png';
           customIcon = _.customIcons.pause;

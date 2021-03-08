@@ -4,7 +4,7 @@ import 'package:meedu_player/meedu_player.dart';
 import 'package:meedu_player/src/helpers/utils.dart';
 
 class PlayerSlider extends StatelessWidget {
-  const PlayerSlider({Key key}) : super(key: key);
+  const PlayerSlider({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +85,9 @@ class PlayerSlider extends StatelessWidget {
 class MSliderTrackShape extends RoundedRectSliderTrackShape {
   @override
   Rect getPreferredRect({
-    RenderBox parentBox,
+    required RenderBox parentBox,
     Offset offset = Offset.zero,
-    SliderThemeData sliderTheme,
+    SliderThemeData? sliderTheme,
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {

@@ -1,4 +1,4 @@
-String printDuration(Duration duration) {
+String printDuration(Duration? duration) {
   if (duration == null) return "--:--";
 
   String twoDigits(int n) {
@@ -11,7 +11,7 @@ String printDuration(Duration duration) {
   return "$twoDigitMinutes:$twoDigitSeconds";
 }
 
-String printDurationWithHours(Duration duration) {
+String printDurationWithHours(Duration? duration) {
   if (duration == null) return "--:--:--";
 
   String twoDigits(int n) {
